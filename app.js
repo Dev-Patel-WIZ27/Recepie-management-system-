@@ -243,7 +243,7 @@ window.handleSendOTP = async function() {
                 // If the user has Twilio credentials setup, the phone will get the text!
                 // For safety during local dev we also log it.
                 console.log(`Fallback OTP log -> ${otp}`);
-                hint.innerHTML = `A real SMS has been requested via Twilio 📱`;
+                hint.innerHTML = `Test Mode! Your secure OTP code is:<br><span style="font-size:1.8rem; color:#ff5e3a; letter-spacing:4px; font-weight:900;">${otp}</span>`;
                 hint.style.display = 'block';
                 hint.style.background = 'rgba(255, 234, 167, 0.9)';
             }
