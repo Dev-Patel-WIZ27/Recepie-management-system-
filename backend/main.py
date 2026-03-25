@@ -14,8 +14,8 @@ TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
 
-import models
-from database import engine, get_db
+from backend import models
+from backend.database import engine, get_db
 
 # Create all tables
 models.Base.metadata.create_all(bind=engine)
