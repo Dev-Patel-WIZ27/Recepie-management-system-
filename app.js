@@ -63,8 +63,8 @@ window.navigate = async function(route) {
         state.route = 'login';
     } else {
         if (route === 'admin') {
-            const pass = prompt("Enter Owner Password (admin123):");
-            if (pass !== "admin123") {
+            const pass = prompt("Enter Owner Password:");
+            if (pass !== "wiz2712") {
                 alert("Incorrect Password!");
                 return;
             }
