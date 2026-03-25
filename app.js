@@ -62,6 +62,14 @@ window.navigate = async function(route) {
     if (protectedRoutes.includes(route) && !state.user) {
         state.route = 'login';
     } else {
+        if (route === 'admin') {
+            const pass = prompt("Enter Owner Password (admin123):");
+            if (pass !== "admin123") {
+                alert("Incorrect Password!");
+                return;
+            }
+            window.adminSecret = pass;
+        }
         state.route = route;
     }
     
@@ -550,7 +558,7 @@ window.handleAddComment = async function() {
 
 async function fetchAdminUsers() {
     try {
-        const res = await fetch(`${API_URL}/admin/users`);
+        const res = await fetch(`${API_URL}/admin/users?secret=${window.adminSecret || ''}`);
         if (res.ok) {
             const data = await res.json();
             state.adminUsers = data.users || [];

@@ -194,7 +194,9 @@ def add_post(req: PostCreate, db: Session = Depends(get_db)):
     return {"status": "success"}
 
 @app.get("/admin/users")
-def get_all_users(db: Session = Depends(get_db)):
+def get_all_users(secret: str = None, db: Session = Depends(get_db)):
+    if secret != "admin123":
+        raise HTTPException(status_code=403, detail="Forbidden")
     users = db.query(models.User).all()
     return {"status": "success", "users": [{"id": u.id, "phone": u.phone, "name": u.name} for u in users]}
 
