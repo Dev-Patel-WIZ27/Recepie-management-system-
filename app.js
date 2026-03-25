@@ -197,7 +197,7 @@ function renderLogin() {
             
             <div id="login-step-1">
                 <div class="input-group">
-                    <label>Your Name <span style="font-size: 0.8rem; opacity: 0.7;">(Optional)</span></label>
+                    <label>Your Name <span style="font-size: 0.8rem; color: #d63031;">*</span></label>
                     <input type="text" id="name-input" class="input-field" placeholder="e.g. Gordon Ramsay" autocomplete="off" style="margin-bottom: 24px;" />
                 </div>
                 <div class="input-group">
@@ -230,9 +230,16 @@ function renderLogin() {
 
 window.handleSendOTP = async function() {
     const phone = document.getElementById('mobile-input').value.trim();
+    const name = document.getElementById('name-input').value.trim();
+    
+    if (name.length < 2) {
+        alert("Please enter your full name.");
+        return;
+    }
+    
     if (phone.length > 2) {
         window.tempPhone = phone; 
-        window.tempName = document.getElementById('name-input').value.trim();
+        window.tempName = name;
         const otp = Math.floor(1000 + Math.random() * 9000).toString();
         state.generatedOTP = otp;
         
