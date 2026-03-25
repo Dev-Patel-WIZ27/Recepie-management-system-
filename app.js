@@ -122,11 +122,11 @@ function renderHome() {
             <div class="glass-3d" style="display: inline-block; padding: 10px 20px; color: var(--primary-color); border-radius: 30px; font-weight: 700; margin-bottom: 24px; font-size: 0.95rem;">
                 🚀 The Smarter Way to Cook
             </div>
-            <h1 style="font-size: 4.5rem; margin-bottom: 24px; color: var(--text-dark); line-height: 1.1; font-weight: 800; text-shadow: 2px 2px 4px rgba(255,255,255,0.8);">
+            <h1 class="hero-title" style="font-size: 4.5rem; margin-bottom: 24px; color: var(--text-dark); line-height: 1.1; font-weight: 800; text-shadow: 2px 2px 4px rgba(255,255,255,0.8);">
                 Zero Waste.<br/>
                 <span style="color: var(--primary-color);">Maximum Taste.</span>
             </h1>
-            <p style="font-size: 1.3rem; color: var(--text-dark); font-weight: 500; margin-bottom: 40px; padding: 0 40px; text-shadow: 1px 1px 0px rgba(255,255,255,0.8);">
+            <p class="hero-subtitle" style="font-size: 1.3rem; color: var(--text-dark); font-weight: 500; margin-bottom: 40px; padding: 0 40px; text-shadow: 1px 1px 0px rgba(255,255,255,0.8);">
                 Tell us what ingredients you have in your kitchen, and we'll instantly find delicious recipes you can make right now.
             </p>
             <div style="display: flex; gap: 20px; justify-content: center;">
@@ -334,7 +334,7 @@ function renderPantry() {
     }
 
     return `
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+        <div class="responsive-grid" style="gap: 40px; align-items: start;">
             <div class="glass glass-3d" style="padding: 40px;">
                 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px;">
                     <div style="font-size: 2.5rem; color: var(--primary-color);"><i class="ph-fill ph-basket"></i></div>
@@ -352,7 +352,7 @@ function renderPantry() {
                         ${state.ingredients.length} Selected
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-height: 600px; overflow-y: auto; padding-right: 12px;">
+                <div class="responsive-grid" style="gap: 24px; max-height: 600px; overflow-y: auto; padding-right: 12px;">
                     ${matchedRecipesHTML}
                 </div>
             </div>
@@ -450,7 +450,7 @@ function renderFamily() {
                 <h2 style="font-size: 2.8rem; margin-bottom: 16px; font-weight: 800;">Family DB Hub</h2>
                 <p style="color: var(--text-dark); margin-bottom: 48px; font-size: 1.15rem; font-weight: 500;">Connect securely to the FastAPI Backend.</p>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; text-align: left;">
+                <div class="responsive-grid" style="gap: 32px; text-align: left;">
                     
                     <div class="glass" style="padding: 32px; border: 2px dashed rgba(255,94,58,0.5); border-radius: var(--radius-lg); transition: border 0.3s;">
                         <h3 style="margin-bottom: 16px; font-size: 1.5rem;">Create Data</h3>

@@ -143,3 +143,41 @@ body::before {
 @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px) scale(0.9); visibility: hidden; } }
 .ph-spin { animation: spin 1s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Responsive Grid System */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 768px) {
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .navbar {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  .hero-title {
+    font-size: 2.8rem !important;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem !important;
+    padding: 0 10px !important;
+  }
+  .glass {
+    padding: 24px !important;
+  }
+  #page-content {
+    padding: 40px 0;
+  }
+  .toast-container {
+    right: 16px;
+    left: 16px;
+  }
+  .toast {
+    flex-direction: column;
+    text-align: center;
+  }
+}
