@@ -62,6 +62,7 @@ class OTPRequest(BaseModel):
 class VerifyRequest(BaseModel):
     phone: str
     otp: str
+    name: Optional[str] = None
 
 class MatchRequest(BaseModel):
     ingredients: List[str]
@@ -106,11 +107,14 @@ def send_otp(req: OTPRequest, db: Session = Depends(get_db)):
 def verify_otp(req: VerifyRequest, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.phone == req.phone).first()
     if not user:
-        user = models.User(phone=req.phone)
+        user = models.User(phone=req.phone, name=req.name)
         db.add(user)
         db.commit()
-        db.refresh(user)
-    return {"status": "success", "user_id": user.id, "phone": user.phone}
+    elif req.name and not user.name:
+        user.name = req.name
+        db.commit()
+    db.refresh(user)
+    return {"status": "success", "user_id": user.id, "phone": user.phone, "name": user.name}
 
 @app.post("/recipes/match")
 def get_matching_recipes(req: MatchRequest, db: Session = Depends(get_db)):

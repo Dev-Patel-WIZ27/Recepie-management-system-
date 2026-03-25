@@ -192,6 +192,10 @@ function renderLogin() {
             
             <div id="login-step-1">
                 <div class="input-group">
+                    <label>Your Name <span style="font-size: 0.8rem; opacity: 0.7;">(Optional)</span></label>
+                    <input type="text" id="name-input" class="input-field" placeholder="e.g. Gordon Ramsay" autocomplete="off" style="margin-bottom: 24px;" />
+                </div>
+                <div class="input-group">
                     <label>Mobile Number</label>
                     <input type="tel" id="mobile-input" class="input-field" placeholder="e.g. 9876543210" autocomplete="off" />
                 </div>
@@ -223,6 +227,7 @@ window.handleSendOTP = async function() {
     const phone = document.getElementById('mobile-input').value.trim();
     if (phone.length > 2) {
         window.tempPhone = phone; 
+        window.tempName = document.getElementById('name-input').value.trim();
         const otp = Math.floor(1000 + Math.random() * 9000).toString();
         state.generatedOTP = otp;
         
@@ -275,7 +280,7 @@ window.handleVerifyOTP = async function() {
         try {
             const res = await fetch(`${API_URL}/auth/verify-otp`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ phone: window.tempPhone, otp: otpInput })
+                body: JSON.stringify({ phone: window.tempPhone, otp: otpInput, name: window.tempName || null })
             });
             const data = await res.json();
             if(data.status === 'success') {
