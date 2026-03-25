@@ -8,7 +8,8 @@ const state = {
     matchedRecipes: [],
     generatedOTP: null,
     userFamily: null,
-    familyData: null
+    familyData: null,
+    adminUsers: []
 };
 
 // Expanded Data (Ingredients remain static for UI picking)
@@ -34,6 +35,7 @@ function render() {
                         <a class="nav-link active" id="nav-home" onclick="navigate('home')">Home</a>
                         <a class="nav-link" id="nav-pantry" onclick="navigate('pantry')">Pantry</a>
                         <a class="nav-link" id="nav-family" onclick="navigate('family')">Family</a>
+                        <a class="nav-link" id="nav-admin" onclick="navigate('admin')" style="color:#d63031;"><i class="ph-bold ph-lock-key"></i> Admin</a>
                         <button class="btn btn-primary" id="nav-login" onclick="navigate('login')" style="padding: 8px 16px; font-size: 0.9rem;">Login</button>
                     </div>
                 </nav>
@@ -50,12 +52,13 @@ function render() {
         case 'login': content.innerHTML = renderLogin(); break;
         case 'pantry': content.innerHTML = renderPantry(); break;
         case 'family': content.innerHTML = renderFamily(); break;
+        case 'admin': content.innerHTML = renderAdmin(); break;
         default: content.innerHTML = renderHome();
     }
 }
 
 window.navigate = async function(route) {
-    const protectedRoutes = ['pantry', 'family'];
+    const protectedRoutes = ['pantry', 'family', 'admin'];
     if (protectedRoutes.includes(route) && !state.user) {
         state.route = 'login';
     } else {
@@ -64,6 +67,7 @@ window.navigate = async function(route) {
     
     if (state.route === 'pantry') await fetchMatches();
     if (state.route === 'family' && state.userFamily) await fetchFamily();
+    if (state.route === 'admin') await fetchAdminUsers();
     
     render();
 };
@@ -537,6 +541,52 @@ window.handleAddComment = async function() {
             render();
         } catch(e) {}
     }
+}
+
+async function fetchAdminUsers() {
+    try {
+        const res = await fetch(`${API_URL}/admin/users`);
+        if (res.ok) {
+            const data = await res.json();
+            state.adminUsers = data.users || [];
+        }
+    } catch(e) { console.error(e); }
+}
+
+function renderAdmin() {
+    if (!state.user) return ''; 
+    let tableRows = (state.adminUsers || []).map(u => `
+        <tr>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); font-family: monospace;">${u.id}</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); font-weight: 800; color: var(--primary-color);">${u.phone}</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1);">${u.name || '<span style="opacity:0.5; font-style:italic;">Not provided</span>'}</td>
+        </tr>
+    `).join('');
+
+    return `
+        <div class="glass glass-3d" style="max-width: 800px; margin: 40px auto; padding: 40px; text-align: left;">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px;">
+                <div style="font-size: 2.5rem; color: #d63031;"><i class="ph-fill ph-lock-key"></i></div>
+                <h2 style="margin: 0; font-size: 2.2rem;">Owner Dashboard</h2>
+            </div>
+            <p style="color: var(--text-dark); margin-bottom: 32px; font-size: 1.1rem; font-weight: 500;">Welcome back! Here is a live feed of everyone who has securely registered and saved their phone number to your database.</p>
+            
+            <div style="background: rgba(255,255,255,0.6); padding: 8px; border-radius: var(--radius-lg); box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);">
+                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: rgba(0,0,0,0.05);">
+                            <th style="padding: 16px; border-top-left-radius: 8px;">User ID</th>
+                            <th style="padding: 16px;">Phone Number</th>
+                            <th style="padding: 16px; border-top-right-radius: 8px;">Name (Optional)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows.length > 0 ? tableRows : '<tr><td colspan="3" style="text-align:center; padding: 32px; font-weight: 600;">No users have registered yet.</td></tr>'}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
 }
 
 document.addEventListener('DOMContentLoaded', () => { render(); });

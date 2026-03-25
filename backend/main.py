@@ -188,3 +188,9 @@ def add_post(req: PostCreate, db: Session = Depends(get_db)):
     db.add(post)
     db.commit()
     return {"status": "success"}
+
+@app.get("/admin/users")
+def get_all_users(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    return {"status": "success", "users": [{"id": u.id, "phone": u.phone, "name": u.name} for u in users]}
+
