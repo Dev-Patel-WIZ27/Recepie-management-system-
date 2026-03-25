@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://recepie-backend-1jjc.onrender.com";
 
 // Global State
 const state = {
