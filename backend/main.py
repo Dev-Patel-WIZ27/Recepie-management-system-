@@ -13,6 +13,7 @@ load_dotenv()
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
 from backend import models
 from backend.database import engine, get_db
@@ -195,7 +196,7 @@ def add_post(req: PostCreate, db: Session = Depends(get_db)):
 
 @app.get("/admin/users")
 def get_all_users(secret: str = None, db: Session = Depends(get_db)):
-    if secret != "wiz2712":
+    if not ADMIN_PASSWORD or secret != ADMIN_PASSWORD:
         raise HTTPException(status_code=403, detail="Forbidden")
     users = db.query(models.User).all()
     return {"status": "success", "users": [{"id": u.id, "phone": u.phone, "name": u.name} for u in users]}

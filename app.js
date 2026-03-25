@@ -64,10 +64,7 @@ window.navigate = async function(route) {
     } else {
         if (route === 'admin') {
             const pass = prompt("Enter Owner Password:");
-            if (pass !== "wiz2712") {
-                alert("Incorrect Password!");
-                return;
-            }
+            if (!pass) return; // User cancelled
             window.adminSecret = pass;
         }
         state.route = route;
@@ -562,6 +559,11 @@ async function fetchAdminUsers() {
         if (res.ok) {
             const data = await res.json();
             state.adminUsers = data.users || [];
+        } else {
+            alert("Incorrect Password or Access Denied!");
+            window.adminSecret = null;
+            state.route = 'home';
+            render();
         }
     } catch(e) { console.error(e); }
 }
