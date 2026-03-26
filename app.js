@@ -29,7 +29,7 @@ function render() {
             <div id="layout" class="container">
                 <nav class="navbar glass">
                     <a href="#" class="logo" onclick="navigate('home')">
-                        <i class="ph-fill ph-cooking-pot"></i> RecipeHero
+                        <img src="mealmate-logo.jpg" alt="Meal Mate" style="height: 32px; width: 32px; border-radius: 8px; object-fit: cover;"> Meal Mate
                     </a>
                     <div class="nav-links">
                         <a class="nav-link active" id="nav-home" onclick="navigate('home')">Home</a>
@@ -70,8 +70,8 @@ window.navigate = async function(route) {
         state.route = route;
     }
     
-    // Scroll Lock for Login Page and Home Page
-    if (state.route === 'login' || state.route === 'home') {
+    // Scroll Lock for Home Page to preserve full-screen layout
+    if (state.route === 'home') {
         document.body.style.overflow = 'hidden';
         document.documentElement.style.overflow = 'hidden';
     } else {
@@ -79,11 +79,13 @@ window.navigate = async function(route) {
         document.documentElement.style.overflow = 'auto';
     }
     
-    if (state.route === 'pantry') await fetchMatches();
-    if (state.route === 'family' && state.userFamily) await fetchFamily();
-    if (state.route === 'admin') await fetchAdminUsers();
-    
+    // Render the layout immediately so the user isn't stuck waiting
     render();
+    
+    // Fetch background data asynchronously and trigger re-render
+    if (state.route === 'pantry') fetchMatches().then(render);
+    if (state.route === 'family' && state.userFamily) fetchFamily().then(render);
+    if (state.route === 'admin') fetchAdminUsers().then(render);
 };
 
 function updateNavState() {
@@ -138,8 +140,13 @@ async function fetchFamily() {
 // --- RENDERERS ---
 function renderHome() {
     return `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 110px); max-width: 800px; margin: 0 auto; text-align: center; overflow: hidden; padding-bottom: 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 110px); max-width: 800px; margin: 0 auto; text-align: center; overflow: hidden; padding-bottom: 20px; position: relative;">
             
+            <!-- 3D FLOATING MEALS -->
+            <img src="pizza.png" style="position: absolute; top: 10%; left: -10%; width: 120px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); animation: float3d-1 6s ease-in-out infinite; z-index: -1; mix-blend-mode: multiply;" alt="Floating Pizza" />
+            <img src="burger.png" style="position: absolute; top: 50%; right: -15%; width: 140px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); animation: float3d-2 8s ease-in-out infinite; z-index: -1; mix-blend-mode: multiply;" alt="Floating Burger" />
+            <img src="noodles.png" style="position: absolute; bottom: 5%; left: 0%; width: 110px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); animation: float3d-3 7s ease-in-out infinite; z-index: -1; mix-blend-mode: multiply;" alt="Floating Noodles" />
+
             <div style="flex-shrink: 0; margin-bottom: 20px;">
                 <div class="glass-3d" style="display: inline-block; padding: 8px 20px; color: var(--primary-color); border-radius: 30px; font-weight: 700; margin-bottom: 16px; font-size: 0.9rem;">
                     🚀 The Smarter Way to Cook
@@ -195,7 +202,7 @@ function simulateSMS(phone, otp) {
         <div style="font-size: 2.2rem; color: #10b981;"><i class="ph-fill ph-chat-circle-text"></i></div>
         <div>
             <div style="font-size: 0.75rem; font-weight: 800; color: #636e72; letter-spacing: 1px;">MESSAGES • NOW</div>
-            <div style="font-size: 1rem; font-weight: 600; color: #2d3436; margin-top: 4px;">RecipeHero Secure Code: <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary-color);">${otp}</span></div>
+            <div style="font-size: 1rem; font-weight: 600; color: #2d3436; margin-top: 4px;">Meal Mate Secure Code: <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary-color);">${otp}</span></div>
             <div style="font-size: 0.8rem; color: #636e72; margin-top: 2px;">Use this code to verify your number.</div>
         </div>
     `;
@@ -205,7 +212,7 @@ function simulateSMS(phone, otp) {
 
 function renderLogin() {
     return `
-        <div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 180px); position: relative;">
+        <div class="login-wrapper" style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 180px); position: relative;">
             <div class="glass glass-3d" style="max-width: 450px; width: 100%; padding: 40px; position: relative; z-index: 10;">
                 
                 <!-- Walking 3D Chef Animation -->
@@ -248,7 +255,7 @@ function renderLogin() {
                     <input type="number" id="otp-input" class="input-field" placeholder="1234" autocomplete="off" />
                     <div id="otp-hint" style="margin-top: 10px; font-size: 0.9rem; color: var(--primary-color); font-weight: 800; display:none; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 8px; text-align: center;"></div>
                 </div>
-                <button class="btn btn-primary glass-3d" style="width: 100%; padding: 14px; font-size: 1.1rem;" onclick="handleVerifyOTP()">
+                <button id="verify-otp-btn" class="btn btn-primary glass-3d" style="width: 100%; padding: 14px; font-size: 1.1rem;" onclick="handleVerifyOTP()">
                     Verify & Login
                 </button>
                 <div style="text-align: center; margin-top: 16px;">
@@ -281,18 +288,21 @@ window.handleSendOTP = async function() {
         btn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Generating securely...';
         btn.disabled = true;
         
-        try {
-            await fetch(`${API_URL}/auth/send-otp`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ phone: phone, otp: otp })
-            });
-        } catch(e) { console.warn("Backend unavailable."); }
+        // Start fetch asynchronously so we don't block the UI if Render is asleep
+        fetch(`${API_URL}/auth/send-otp`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ phone: phone, otp: otp })
+        }).catch(e => console.warn("Backend unavailable."));
         
         setTimeout(() => {
             document.getElementById('login-step-1').style.display = 'none';
             document.getElementById('login-step-2').style.display = 'block';
             
-            // Removed the old mock toast simulator!
+            // Restore the mock toast simulator so the user sees the OTP generated visually
+            if (typeof simulateSMS === 'function') {
+                simulateSMS(phone, otp);
+            }
+            
             const hint = document.getElementById('otp-hint');
             if (hint) {
                 // If the user has Twilio credentials setup, the phone will get the text!
@@ -323,6 +333,13 @@ window.showStep1 = function() {
 window.handleVerifyOTP = async function() {
     const otpInput = document.getElementById('otp-input').value.trim();
     if (state.generatedOTP && otpInput === state.generatedOTP) {
+        
+        const btn = document.getElementById('verify-otp-btn');
+        if (btn) {
+            btn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Verifying securely...';
+            btn.disabled = true;
+        }
+
         try {
             const res = await fetch(`${API_URL}/auth/verify-otp`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},

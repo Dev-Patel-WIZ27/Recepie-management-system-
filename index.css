@@ -237,6 +237,12 @@ body::before {
   .responsive-grid {
     grid-template-columns: 1fr !important;
   }
+  .login-wrapper {
+    display: block !important;
+    margin-top: 140px !important;
+    margin-bottom: 40px !important;
+    min-height: auto !important;
+  }
   .navbar {
     flex-direction: column;
     gap: 16px;
@@ -263,4 +269,37 @@ body::before {
     flex-direction: column;
     text-align: center;
   }
+  
+  .chef-walk-wrapper {
+    bottom: auto !important;
+    top: -120px !important;
+    left: 50% !important;
+    animation: chefWalkInMobile 3s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+  }
+  .chef-speech-bubble {
+    right: -30px !important;
+    top: -70px !important;
+  }
+  .chef-speech-bubble::after {
+    left: 40px !important;
+  }
+}
+
+@keyframes chefWalkInMobile {
+  0% { transform: translateX(calc(-50vw - 200px)) scale(0.8); }
+  100% { transform: translateX(-50%) scale(0.8); }
+}
+
+/* 3D Floating Meals Animations */
+@keyframes float3d-1 {
+  0%, 100% { transform: translateY(0) rotate(5deg) scale(1); }
+  50% { transform: translateY(-20px) rotate(-5deg) scale(1.05); }
+}
+@keyframes float3d-2 {
+  0%, 100% { transform: translateY(0) rotate(-10deg) scale(1); }
+  50% { transform: translateY(-25px) rotate(5deg) scale(1.08); }
+}
+@keyframes float3d-3 {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  50% { transform: translateY(-15px) rotate(15deg) scale(1.02); }
 }
