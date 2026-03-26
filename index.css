@@ -141,6 +141,44 @@ body::before {
 }
 @keyframes slideInRight { to { transform: translateX(0); } }
 @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px) scale(0.9); visibility: hidden; } }
+/* 3D Chef Animation System */
+.chef-walk-wrapper {
+  position: absolute;
+  bottom: -15px;
+  left: -130px;
+  z-index: 20;
+  animation: chefWalkIn 2.2s ease-out forwards;
+}
+
+.chef-float {
+  width: 150px;
+  filter: drop-shadow(10px 15px 15px rgba(0,0,0,0.35));
+  animation: chefWaddle 2.2s ease-out forwards, chefHover 3s ease-in-out infinite 2.2s;
+  display: flex; justify-content: center; align-items:center; position: relative;
+}
+
+@keyframes chefWalkIn {
+  0% { transform: translateX(-400px); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes chefWaddle {
+  0% { transform: translateY(0) rotate(-15deg); }
+  15% { transform: translateY(-35px) rotate(15deg); }
+  30% { transform: translateY(0) rotate(-15deg); }
+  45% { transform: translateY(-35px) rotate(15deg); }
+  60% { transform: translateY(0) rotate(-15deg); }
+  75% { transform: translateY(-25px) rotate(10deg); }
+  90% { transform: translateY(0) rotate(-5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes chefHover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
 .ph-spin { animation: spin 1s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 

@@ -187,6 +187,15 @@ function simulateSMS(phone, otp) {
 function renderLogin() {
     return `
         <div class="glass glass-3d" style="max-width: 450px; margin: 60px auto; padding: 48px; position: relative;">
+            
+            <!-- Walking 3D Chef Animation -->
+            <div class="chef-walk-wrapper">
+                <div class="chef-float">
+                    <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Man%20cook/3D/man_cook_3d.png" style="width: 140px; height: auto;" alt="3D Chef">
+                    <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Pizza/3D/pizza_3d.png" style="width: 65px; position: absolute; top: 40px; left: -15px; transform: rotate(-20deg); filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));" alt="3D Pizza">
+                </div>
+            </div>
+
             <div style="text-align: center; margin-bottom: 32px;">
                 <div style="width: 72px; height: 72px; background: linear-gradient(135deg, rgba(255,94,58,0.2), rgba(255,94,58,0.05)); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 16px;">
                     <i class="ph-fill ph-shield-check"></i>
