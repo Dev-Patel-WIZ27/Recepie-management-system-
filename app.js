@@ -70,8 +70,8 @@ window.navigate = async function(route) {
         state.route = route;
     }
     
-    // Scroll Lock for Login Page
-    if (state.route === 'login') {
+    // Scroll Lock for Login Page and Home Page
+    if (state.route === 'login' || state.route === 'home') {
         document.body.style.overflow = 'hidden';
     } else {
         document.body.style.overflow = 'auto';
@@ -130,26 +130,30 @@ async function fetchFamily() {
 // --- RENDERERS ---
 function renderHome() {
     return `
-        <div style="text-align: center; max-width: 800px; margin: 40px auto;">
-            <div class="glass-3d" style="display: inline-block; padding: 10px 20px; color: var(--primary-color); border-radius: 30px; font-weight: 700; margin-bottom: 24px; font-size: 0.95rem;">
-                🚀 The Smarter Way to Cook
-            </div>
-            <h1 class="hero-title" style="font-size: 4.5rem; margin-bottom: 24px; color: var(--text-dark); line-height: 1.1; font-weight: 800; text-shadow: 2px 2px 4px rgba(255,255,255,0.8);">
-                Zero Waste.<br/>
-                <span style="color: var(--primary-color);">Maximum Taste.</span>
-            </h1>
-            <p class="hero-subtitle" style="font-size: 1.3rem; color: var(--text-dark); font-weight: 500; margin-bottom: 40px; padding: 0 40px; text-shadow: 1px 1px 0px rgba(255,255,255,0.8);">
-                Tell us what ingredients you have in your kitchen, and we'll instantly find delicious recipes you can make right now.
-            </p>
-            <div style="display: flex; gap: 20px; justify-content: center;">
-                <button class="btn btn-primary glass-3d" style="font-size: 1.1rem; padding: 16px 36px; border-radius: 30px;" onclick="navigate('pantry')">
-                    <i class="ph-bold ph-magic-wand"></i> Get Started Free
-                </button>
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 120px); max-width: 800px; margin: 0 auto; text-align: center; overflow: hidden;">
+            
+            <div style="flex-shrink: 0; margin-bottom: 24px; margin-top: 10px;">
+                <div class="glass-3d" style="display: inline-block; padding: 8px 20px; color: var(--primary-color); border-radius: 30px; font-weight: 700; margin-bottom: 16px; font-size: 0.9rem;">
+                    🚀 The Smarter Way to Cook
+                </div>
+                <h1 class="hero-title" style="font-size: 3.5rem; margin-bottom: 16px; color: var(--text-dark); line-height: 1.1; font-weight: 800; text-shadow: 2px 2px 4px rgba(255,255,255,0.8);">
+                    Zero Waste.<br/>
+                    <span style="color: var(--primary-color);">Maximum Taste.</span>
+                </h1>
+                <p class="hero-subtitle" style="font-size: 1.15rem; color: var(--text-dark); font-weight: 500; margin-bottom: 24px; padding: 0 40px; text-shadow: 1px 1px 0px rgba(255,255,255,0.8);">
+                    Tell us what ingredients you have in your kitchen, and we'll instantly find delicious recipes you can make right now.
+                </p>
+                <div style="display: flex; gap: 20px; justify-content: center;">
+                    <button class="btn btn-primary glass-3d" style="font-size: 1.1rem; padding: 14px 36px; border-radius: 30px;" onclick="navigate('pantry')">
+                        <i class="ph-bold ph-magic-wand"></i> Get Started Free
+                    </button>
+                </div>
             </div>
             
-            <div style="margin-top: 80px;" class="glass-3d">
-                <img src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-4.0.3&w=1200&q=80" alt="Fresh ingredients" style="width: 100%; height: 400px; object-fit: cover; border-radius: calc(var(--radius-lg) - 2px);">
+            <div class="glass-3d" style="width: 100%; flex: 1; min-height: 0; margin-bottom: 20px; border-radius: calc(var(--radius-lg) - 2px); overflow: hidden;">
+                <img src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-4.0.3&w=1200&q=80" alt="Fresh ingredients" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
+            
         </div>
     `;
 }
@@ -219,11 +223,11 @@ function renderLogin() {
             <div id="login-step-1">
                 <div class="input-group">
                     <label>Your Name <span style="font-size: 0.8rem; color: #d63031;">*</span></label>
-                    <input type="text" id="name-input" class="input-field" placeholder="e.g. Gordon Ramsay" autocomplete="off" style="margin-bottom: 24px;" onfocus="hideChefBubble()" />
+                    <input type="text" id="name-input" class="input-field" placeholder="e.g. Gordon Ramsay" autocomplete="off" style="margin-bottom: 24px;" />
                 </div>
                 <div class="input-group">
                     <label>Mobile Number</label>
-                    <input type="tel" id="mobile-input" class="input-field" placeholder="e.g. 9876543210" autocomplete="off" onfocus="hideChefBubble()" />
+                    <input type="tel" id="mobile-input" class="input-field" placeholder="e.g. 9876543210" autocomplete="off" />
                 </div>
                 <button id="send-otp-btn" class="btn btn-primary glass-3d" style="width: 100%; padding: 16px; font-size: 1.1rem;" onclick="handleSendOTP()">
                     Send Security Code <i class="ph-bold ph-paper-plane-right"></i>
