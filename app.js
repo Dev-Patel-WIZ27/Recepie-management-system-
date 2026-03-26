@@ -196,10 +196,10 @@ function renderLogin() {
         <div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 180px);">
             <div class="glass glass-3d" style="max-width: 450px; width: 100%; padding: 40px; position: relative; z-index: 10;">
                 
-                <!-- Walking 3D Chef Animation -->
+                <!-- Walking 3D Lottie Chef Animation -->
                 <div class="chef-walk-wrapper">
-                    <div class="chef-float">
-                        <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Man%20cook/Default/3D/man_cook_3d_default.png" style="width: 150px; height: auto;" alt="3D Chef">
+                    <div class="chef-float" style="filter: drop-shadow(10px 15px 15px rgba(0,0,0,0.3));">
+                        <lottie-player src="./chef-walking.json" background="transparent" speed="1" style="width: 250px; height: 250px;" loop autoplay></lottie-player>
                     </div>
                 </div>
 
