@@ -153,13 +153,25 @@ body::before {
 .chef-float {
   width: 150px;
   filter: drop-shadow(15px 25px 20px rgba(0,0,0,0.4));
-  animation: chefHover 3.5s ease-in-out infinite;
+  animation: chefWaddle 3s cubic-bezier(0.25, 1, 0.5, 1) forwards, chefHover 3.5s ease-in-out infinite 3s;
   display: flex; justify-content: center; align-items:center; position: relative;
 }
 
 @keyframes chefWalkIn {
   0% { transform: translateX(calc(-50vw - 200px)); }
   100% { transform: translateX(0); }
+}
+
+@keyframes chefWaddle {
+  0% { transform: translateY(0) rotate(-15deg); }
+  12% { transform: translateY(-25px) rotate(15deg) scale(1.05); }
+  25% { transform: translateY(0) rotate(-15deg); }
+  37% { transform: translateY(-25px) rotate(15deg) scale(1.05); }
+  50% { transform: translateY(0) rotate(-15deg); }
+  62% { transform: translateY(-15px) rotate(10deg); }
+  75% { transform: translateY(0) rotate(-5deg); }
+  87% { transform: translateY(-5px) rotate(0deg); }
+  100% { transform: translateY(0) rotate(0deg); }
 }
 
 @keyframes chefHover {
