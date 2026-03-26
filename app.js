@@ -1,4 +1,6 @@
-const API_URL = "https://recepie-backend-1jjc.onrender.com";
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+    ? "http://localhost:8000" 
+    : "https://recepie-backend-1jjc.onrender.com";
 window.OWNER_PHONE = "9313765265"; // IMPORTANT: Change this to your real phone number
 
 // Global State
@@ -336,20 +338,23 @@ window.handleVerifyOTP = async function () {
             btn.disabled = true;
         }
 
-        try {
-            const res = await fetch(`${API_URL}/auth/verify-otp`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: window.tempPhone, otp: otpInput, name: window.tempName || null })
-            });
-            const data = await res.json();
+        // Start backend verification asynchronously to avoid blocking UI if Render server is slow
+        fetch(`${API_URL}/auth/verify-otp`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: window.tempPhone, otp: otpInput, name: window.tempName || null })
+        })
+        .then(res => res.json())
+        .then(data => {
             if (data.status === 'success') {
                 state.user = { id: data.user_id, phone: data.phone };
-            } else {
-                state.user = { phone: window.tempPhone }; // fallback
             }
-        } catch (e) {
-            state.user = { phone: window.tempPhone }; // fallback local
-        }
+        })
+        .catch(e => {
+            console.warn("Backend verification failed. Relying on local session.");
+        });
+
+        // Set local fallback user and navigate immediately for fast UI
+        state.user = { phone: window.tempPhone };
         state.generatedOTP = null;
         navigate('pantry');
     } else {
@@ -377,13 +382,29 @@ function renderPantry() {
         matchedRecipesHTML = `<div style="text-align: center; color: var(--text-dark); font-weight: 500; padding: 40px; grid-column: span 2;">Select ingredients from your pantry to see what you can make!</div>`;
     } else if (state.matchedRecipes.length > 0) {
         state.matchedRecipes.forEach(r => {
+            const progress = (r.completeness * 100).toFixed(0);
+            const isComplete = r.missingCount === 0;
+            
             matchedRecipesHTML += `
-                <div class="glass-3d" style="border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; text-align: left; padding: 0;">
+                <div class="glass-3d" style="border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; text-align: left; padding: 0; position: relative;">
+                    ${isComplete ? '<div style="position: absolute; top: 12px; right: 12px; background: #10b981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; z-index: 5; box-shadow: 0 4px 10px rgba(16,185,129,0.3);"><i class="ph-bold ph-check-circle"></i> CAN COOK</div>' : ''}
                     <img src="${r.image}" style="width: 100%; height: 180px; object-fit: cover;" alt="${r.title}">
                     <div style="padding: 20px;">
                         <h4 style="margin-bottom: 8px; font-size: 1.2rem; font-weight: 700;">${r.title}</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-dark); opacity: 0.8; margin-bottom: 16px;"><i class="ph-fill ph-clock"></i> ${r.time} • Mapped ${r.matchCount} ingredients</p>
-                        <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;">View Full Recipe</button>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                            <div style="flex: 1; height: 6px; background: rgba(0,0,0,0.05); border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; width: ${progress}%; background: ${isComplete ? '#10b981' : 'var(--primary-color)'}; transition: width 0.5s;"></div>
+                            </div>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: ${isComplete ? '#10b981' : 'var(--text-dark)'};">${progress}%</span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: var(--text-dark); opacity: 0.8; margin-bottom: 16px;">
+                            <i class="ph-fill ph-clock"></i> ${r.time} • 
+                            <span style="color: var(--primary-color); font-weight: 700;">${r.matchCount} matched</span> 
+                            ${r.missingCount > 0 ? `<span style="opacity: 0.6;">• ${r.missingCount} missing</span>` : ''}
+                        </p>
+                        <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.title + ' recipe')}', '_blank')">
+                            ${isComplete ? 'Start Cooking' : 'View Full Recipe'}
+                        </button>
                     </div>
                 </div>
             `;

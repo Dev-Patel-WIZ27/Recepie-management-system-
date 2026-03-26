@@ -137,19 +137,46 @@ def get_matching_recipes(req: MatchRequest, db: Session = Depends(get_db)):
     if not req.ingredients:
         return {"matches": []}
         
+    # Normalize user ingredients for case-insensitive matching
+    user_ingredients = {ing.strip().lower() for ing in req.ingredients}
+        
     for r in all_recipes:
-        match_count = len([ing for ing in r.ingredients if ing in req.ingredients])
+        # Robustly handle ingredients that might be stored/returned as a JSON string in SQLite
+        recipe_ingredients_raw = r.ingredients
+        if isinstance(recipe_ingredients_raw, str):
+            try:
+                import json
+                recipe_ingredients = json.loads(recipe_ingredients_raw)
+            except:
+                recipe_ingredients = []
+        else:
+            recipe_ingredients = recipe_ingredients_raw or []
+
+        # Normalize recipe ingredients
+        normalized_recipe_ingredients = [ing.strip().lower() for ing in recipe_ingredients]
+        
+        # Calculate matches
+        matched_items = [ing for ing in normalized_recipe_ingredients if ing in user_ingredients]
+        match_count = len(matched_items)
+        
         if match_count > 0:
+            total_count = len(recipe_ingredients)
+            missing_count = total_count - match_count
+            completeness = match_count / total_count if total_count > 0 else 0
+            
             matches.append({
                 "id": r.id,
                 "title": r.title,
-                "ingredients": r.ingredients,
+                "ingredients": recipe_ingredients,
                 "image": r.image,
                 "time": r.time,
-                "matchCount": match_count
+                "matchCount": match_count,
+                "missingCount": missing_count,
+                "completeness": completeness
             })
             
-    matches.sort(key=lambda x: x["matchCount"], reverse=True)
+    # Sort by matchCount (primary), then completeness (secondary), then missingCount (tertiary)
+    matches.sort(key=lambda x: (x["matchCount"], x["completeness"], -x["missingCount"]), reverse=True)
     return {"matches": matches}
 
 @app.post("/family/create")
