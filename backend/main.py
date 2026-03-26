@@ -43,7 +43,7 @@ def seed_db(db: Session):
                 "instructions": "1. Boil pasta in salted water. 2. Sauté garlic in olive oil. 3. Add diced tomatoes and simmer. 4. Toss pasta with sauce and top with parmesan and pepper.",
                 "calories": 450,
                 "servings": 2,
-                "image": "https://images.unsplash.com/photo-1621996316526-78b17b6a4a15?w=400", 
+                "image": "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=400", 
                 "time": "20 mins"
             },
             {
@@ -79,7 +79,7 @@ def seed_db(db: Session):
                 "instructions": "1. Toast the bread. 2. Mash avocado with lemon, salt, and pepper. 3. Spread on toast. 4. Top with a poached or fried egg.",
                 "calories": 380,
                 "servings": 1,
-                "image": "https://images.unsplash.com/photo-1588137378633-981eeff4711d?w=400", 
+                "image": "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400", 
                 "time": "10 mins"
             }
         ]
@@ -121,7 +121,6 @@ class PostCreate(BaseModel):
 @app.post("/auth/send-otp")
 def send_otp(req: OTPRequest, db: Session = Depends(get_db)):
     if TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and TWILIO_PHONE_NUMBER:
-        # Check against placeholder values
         if "your_account_sid" not in TWILIO_ACCOUNT_SID.lower():
             try:
                 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -136,7 +135,6 @@ def send_otp(req: OTPRequest, db: Session = Depends(get_db)):
                 print(f"❌ Twilio Error: {e}")
                 return {"status": "error", "message": str(e)}
     
-    # Fallback to console output if missing credentials
     print(f"⚠️ SIMULATED SEND API (No Twilio Keys). OTP for {req.phone} is: {req.otp}")
     return {"status": "success", "message": f"Simulated OTP dispatch to {req.phone} (No Twilio keys). OTP: {req.otp}"}
 
@@ -152,7 +150,6 @@ def verify_otp(req: VerifyRequest, db: Session = Depends(get_db)):
         db.commit()
     db.refresh(user)
     
-    # Save a historical login record for the admin dashboard
     login_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     login_record = models.LoginRecord(
         phone=req.phone, 
@@ -172,11 +169,9 @@ def get_matching_recipes(req: MatchRequest, db: Session = Depends(get_db)):
     if not req.ingredients:
         return {"matches": []}
         
-    # Normalize user ingredients for case-insensitive matching
     user_ingredients = {ing.strip().lower() for ing in req.ingredients}
         
     for r in all_recipes:
-        # Robustly handle ingredients that might be stored/returned as a JSON string in SQLite
         recipe_ingredients_raw = r.ingredients
         if isinstance(recipe_ingredients_raw, str):
             try:
@@ -187,10 +182,7 @@ def get_matching_recipes(req: MatchRequest, db: Session = Depends(get_db)):
         else:
             recipe_ingredients = recipe_ingredients_raw or []
 
-        # Normalize recipe ingredients
         normalized_recipe_ingredients = [ing.strip().lower() for ing in recipe_ingredients]
-        
-        # Calculate matches
         matched_items = [ing for ing in normalized_recipe_ingredients if ing in user_ingredients]
         match_count = len(matched_items)
         
@@ -213,7 +205,6 @@ def get_matching_recipes(req: MatchRequest, db: Session = Depends(get_db)):
                 "completeness": completeness
             })
             
-    # Sort by matchCount (primary), then completeness (secondary), then missingCount (tertiary)
     matches.sort(key=lambda x: (x["matchCount"], x["completeness"], -x["missingCount"]), reverse=True)
     return {"matches": matches}
 
@@ -236,7 +227,7 @@ def get_group(code: str, db: Session = Depends(get_db)):
         "groupName": group.name,
         "code": group.code,
         "members": [{"id": m.id, "name": m.name, "role": m.role} for m in group.members],
-        "posts": [{"id": p.id, "author": p.author, "content": p.content, "time": m.time_posted} for p in group.posts]
+        "posts": [{"id": p.id, "author": p.author, "content": p.content, "time": p.time_posted} for p in group.posts]
     }
 
 @app.post("/family/member")
@@ -275,7 +266,26 @@ def add_post(req: PostCreate, db: Session = Depends(get_db)):
 def get_all_users(secret: str = None, db: Session = Depends(get_db)):
     if not ADMIN_PASSWORD or secret != ADMIN_PASSWORD:
         raise HTTPException(status_code=403, detail="Forbidden")
-    # Return full login history sorted by most recent
     records = db.query(models.LoginRecord).order_by(models.LoginRecord.id.desc()).all()
     return {"status": "success", "users": [{"id": r.id, "phone": r.phone, "name": r.name, "timestamp": r.timestamp} for r in records]}
 
+# Static file serving
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+app.mount("/assets", StaticFiles(directory=root_path), name="assets")
+
+@app.get("/")
+@app.get("/login")
+@app.get("/pantry")
+@app.get("/family")
+def serve_index():
+    return FileResponse(os.path.join(root_path, "index.html"))
+
+@app.get("/{filename}")
+def serve_file(filename: str):
+    file_path = os.path.join(root_path, filename)
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"detail": "Not Found"}
