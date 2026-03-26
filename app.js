@@ -628,6 +628,7 @@ function renderAdmin() {
             <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); font-family: monospace;">${u.id}</td>
             <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); font-weight: 800; color: var(--primary-color);">${u.phone}</td>
             <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1);">${u.name || '<span style="opacity:0.5; font-style:italic;">Not provided</span>'}</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; color: #636e72;">${u.timestamp || 'Legacy'}</td>
         </tr>
     `).join('');
 
@@ -643,13 +644,14 @@ function renderAdmin() {
                 <table style="width: 100%; text-align: left; border-collapse: collapse;">
                     <thead>
                         <tr style="background: rgba(0,0,0,0.05);">
-                            <th style="padding: 16px; border-top-left-radius: 8px;">User ID</th>
+                            <th style="padding: 16px; border-top-left-radius: 8px;">Log ID</th>
                             <th style="padding: 16px;">Phone Number</th>
-                            <th style="padding: 16px; border-top-right-radius: 8px;">Name (Optional)</th>
+                            <th style="padding: 16px;">Name</th>
+                            <th style="padding: 16px; border-top-right-radius: 8px;">Time</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${tableRows.length > 0 ? tableRows : '<tr><td colspan="3" style="text-align:center; padding: 32px; font-weight: 600;">No users have registered yet.</td></tr>'}
+                        ${tableRows.length > 0 ? tableRows : '<tr><td colspan="4" style="text-align:center; padding: 32px; font-weight: 600;">No users have registered yet.</td></tr>'}
                     </tbody>
                 </table>
             </div>

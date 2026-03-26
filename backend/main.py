@@ -7,6 +7,7 @@ import random
 import os
 from twilio.rest import Client
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -115,6 +116,17 @@ def verify_otp(req: VerifyRequest, db: Session = Depends(get_db)):
         user.name = req.name
         db.commit()
     db.refresh(user)
+    
+    # Save a historical login record for the admin dashboard
+    login_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    login_record = models.LoginRecord(
+        phone=req.phone, 
+        name=req.name or user.name, 
+        timestamp=login_time
+    )
+    db.add(login_record)
+    db.commit()
+
     return {"status": "success", "user_id": user.id, "phone": user.phone, "name": user.name}
 
 @app.post("/recipes/match")
@@ -198,6 +210,7 @@ def add_post(req: PostCreate, db: Session = Depends(get_db)):
 def get_all_users(secret: str = None, db: Session = Depends(get_db)):
     if not ADMIN_PASSWORD or secret != ADMIN_PASSWORD:
         raise HTTPException(status_code=403, detail="Forbidden")
-    users = db.query(models.User).all()
-    return {"status": "success", "users": [{"id": u.id, "phone": u.phone, "name": u.name} for u in users]}
+    # Return full login history sorted by most recent
+    records = db.query(models.LoginRecord).order_by(models.LoginRecord.id.desc()).all()
+    return {"status": "success", "users": [{"id": r.id, "phone": r.phone, "name": r.name, "timestamp": r.timestamp} for r in records]}
 

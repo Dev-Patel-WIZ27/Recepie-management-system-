@@ -43,3 +43,10 @@ class Recipe(Base):
     ingredients = Column(JSON) # Lists of strings
     image = Column(String)
     time = Column(String)
+
+class LoginRecord(Base):
+    __tablename__ = "login_records"
+    id = Column(Integer, primary_key=True, index=True)
+    phone = Column(String, index=True)
+    name = Column(String, nullable=True)
+    timestamp = Column(String)
