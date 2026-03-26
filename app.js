@@ -1,10 +1,10 @@
 const API_URL = "https://recepie-backend-1jjc.onrender.com";
-window.OWNER_PHONE = "1234567890"; // IMPORTANT: Change this to your real phone number
+window.OWNER_PHONE = "9313765265"; // IMPORTANT: Change this to your real phone number
 
 // Global State
 const state = {
-    user: null, 
-    route: 'home', 
+    user: null,
+    route: 'home',
     ingredients: [],
     matchedRecipes: [],
     generatedOTP: null,
@@ -36,7 +36,7 @@ function render() {
                         <a class="nav-link active" id="nav-home" onclick="navigate('home')">Home</a>
                         <a class="nav-link" id="nav-pantry" onclick="navigate('pantry')">Pantry</a>
                         <a class="nav-link" id="nav-family" onclick="navigate('family')">Family</a>
-                        ${state.user && state.user.phone === window.OWNER_PHONE ? `<a class="nav-link" id="nav-admin" onclick="navigate('admin')" style="color:#d63031;"><i class="ph-bold ph-lock-key"></i> Admin</a>` : ''}
+                        <a class="nav-link" id="nav-admin" onclick="navigate('admin')" style="color:#d63031;"><i class="ph-bold ph-lock-key"></i> Admin</a>
                         <button class="btn btn-primary" id="nav-login" onclick="navigate('login')" style="padding: 8px 16px; font-size: 0.9rem;">Login</button>
                     </div>
                 </nav>
@@ -47,8 +47,8 @@ function render() {
 
     updateNavState();
     const content = document.getElementById('page-content');
-    
-    switch(state.route) {
+
+    switch (state.route) {
         case 'home': content.innerHTML = renderHome(); break;
         case 'login': content.innerHTML = renderLogin(); break;
         case 'pantry': content.innerHTML = renderPantry(); break;
@@ -58,7 +58,7 @@ function render() {
     }
 }
 
-window.navigate = async function(route) {
+window.navigate = async function (route) {
     const protectedRoutes = ['pantry', 'family', 'admin'];
     if (protectedRoutes.includes(route) && !state.user) {
         state.route = 'login';
@@ -70,7 +70,7 @@ window.navigate = async function(route) {
         }
         state.route = route;
     }
-    
+
     // Scroll Lock for Home Page to preserve full-screen layout
     if (state.route === 'home') {
         document.body.style.overflow = 'hidden';
@@ -79,10 +79,10 @@ window.navigate = async function(route) {
         document.body.style.overflow = 'auto';
         document.documentElement.style.overflow = 'auto';
     }
-    
+
     // Render the layout immediately so the user isn't stuck waiting
     render();
-    
+
     // Fetch background data asynchronously and trigger re-render
     if (state.route === 'pantry') fetchMatches().then(render);
     if (state.route === 'family' && state.userFamily) fetchFamily().then(render);
@@ -93,7 +93,7 @@ function updateNavState() {
     document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
     const activeLink = document.getElementById(`nav-${state.route}`);
     if (activeLink) activeLink.classList.add('active');
-    
+
     const loginBtn = document.getElementById('nav-login');
     if (loginBtn) {
         if (state.user) {
@@ -106,7 +106,7 @@ function updateNavState() {
             loginBtn.classList.replace('btn-secondary', 'btn-primary');
         }
     }
-    
+
     // Dynamically adjust padding to prevent overflow on fullscreen pages
     const pageContent = document.getElementById('page-content');
     if (pageContent) {
@@ -118,24 +118,24 @@ function updateNavState() {
 async function fetchMatches() {
     try {
         const res = await fetch(`${API_URL}/recipes/match`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ingredients: state.ingredients })
         });
         const data = await res.json();
         state.matchedRecipes = data.matches || [];
-    } catch(e) { console.error(e); state.matchedRecipes = []; }
+    } catch (e) { console.error(e); state.matchedRecipes = []; }
 }
 
 async function fetchFamily() {
     try {
         const res = await fetch(`${API_URL}/family/${state.userFamily}`);
-        if(res.ok) {
+        if (res.ok) {
             state.familyData = await res.json();
         } else {
             state.userFamily = null;
             state.familyData = null;
         }
-    } catch(e) { console.error(e); }
+    } catch (e) { console.error(e); }
 }
 
 // --- RENDERERS ---
@@ -190,8 +190,8 @@ function simulateSMS(phone, otp) {
         gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 0.5);
-    } catch(e) {}
-    
+    } catch (e) { }
+
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.innerHTML = `
@@ -265,40 +265,40 @@ function renderLogin() {
     `;
 }
 
-window.handleSendOTP = async function() {
+window.handleSendOTP = async function () {
     const phone = document.getElementById('mobile-input').value.trim();
     const name = document.getElementById('name-input').value.trim();
-    
+
     if (name.length < 2) {
         alert("Please enter your full name.");
         return;
     }
-    
+
     if (phone.length > 2) {
-        window.tempPhone = phone; 
+        window.tempPhone = phone;
         window.tempName = name;
         const otp = Math.floor(1000 + Math.random() * 9000).toString();
         state.generatedOTP = otp;
-        
+
         const btn = document.getElementById('send-otp-btn');
         btn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Generating securely...';
         btn.disabled = true;
-        
+
         // Start fetch asynchronously so we don't block the UI if Render is asleep
         fetch(`${API_URL}/auth/send-otp`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone: phone, otp: otp })
         }).catch(e => console.warn("Backend unavailable."));
-        
+
         setTimeout(() => {
             document.getElementById('login-step-1').style.display = 'none';
             document.getElementById('login-step-2').style.display = 'block';
-            
+
             // Restore the mock toast simulator so the user sees the OTP generated visually
             if (typeof simulateSMS === 'function') {
                 simulateSMS(phone, otp);
             }
-            
+
             const hint = document.getElementById('otp-hint');
             if (hint) {
                 // If the user has Twilio credentials setup, the phone will get the text!
@@ -314,7 +314,7 @@ window.handleSendOTP = async function() {
     }
 }
 
-window.showStep1 = function() {
+window.showStep1 = function () {
     state.generatedOTP = null;
     document.getElementById('login-step-1').style.display = 'block';
     document.getElementById('login-step-2').style.display = 'none';
@@ -323,13 +323,13 @@ window.showStep1 = function() {
     btn.innerHTML = 'Send Security Code <i class="ph-bold ph-paper-plane-right"></i>';
     btn.disabled = false;
     const hint = document.getElementById('otp-hint');
-    if(hint) hint.style.display = 'none';
+    if (hint) hint.style.display = 'none';
 }
 
-window.handleVerifyOTP = async function() {
+window.handleVerifyOTP = async function () {
     const otpInput = document.getElementById('otp-input').value.trim();
     if (state.generatedOTP && otpInput === state.generatedOTP) {
-        
+
         const btn = document.getElementById('verify-otp-btn');
         if (btn) {
             btn.innerHTML = '<i class="ph-bold ph-spinner ph-spin"></i> Verifying securely...';
@@ -338,16 +338,16 @@ window.handleVerifyOTP = async function() {
 
         try {
             const res = await fetch(`${API_URL}/auth/verify-otp`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phone: window.tempPhone, otp: otpInput, name: window.tempName || null })
             });
             const data = await res.json();
-            if(data.status === 'success') {
+            if (data.status === 'success') {
                 state.user = { id: data.user_id, phone: data.phone };
             } else {
                 state.user = { phone: window.tempPhone }; // fallback
             }
-        } catch(e) {
+        } catch (e) {
             state.user = { phone: window.tempPhone }; // fallback local
         }
         state.generatedOTP = null;
@@ -419,7 +419,7 @@ function renderPantry() {
     `;
 }
 
-window.toggleIngredient = async function(item) {
+window.toggleIngredient = async function (item) {
     if (state.ingredients.includes(item)) {
         state.ingredients = state.ingredients.filter(i => i !== item);
     } else {
@@ -430,19 +430,19 @@ window.toggleIngredient = async function(item) {
     render(); // Final recipes update
 }
 
-window.createFamilyGroup = async function() {
+window.createFamilyGroup = async function () {
     try {
         const res = await fetch(`${API_URL}/family/create`, {
-            method: 'POST', headers: {'Content-Type': 'application/json'},
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: 'The Culinary Connect' })
         });
         const data = await res.json();
-        if(data.status === 'success') {
+        if (data.status === 'success') {
             state.userFamily = data.code;
-            
+
             // Add self as leader
             await fetch(`${API_URL}/family/member`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: 'You (Creator)', code: data.code, role: 'leader' })
             });
 
@@ -450,10 +450,10 @@ window.createFamilyGroup = async function() {
             await fetchFamily();
             render();
         }
-    } catch(e) { alert("Backend error."); }
+    } catch (e) { alert("Backend error."); }
 }
 
-window.joinFamilyGroup = async function() {
+window.joinFamilyGroup = async function () {
     const code = document.getElementById('join-code').value.trim().toUpperCase();
     if (code.length > 5) {
         try {
@@ -466,41 +466,41 @@ window.joinFamilyGroup = async function() {
             } else {
                 alert("Database says: Family Group Code not found!");
             }
-        } catch(e) { console.error(e); }
+        } catch (e) { console.error(e); }
     } else {
         alert("Please enter a valid Family Group Code.");
     }
 }
 
-window.removeFamilyMember = async function(id) {
+window.removeFamilyMember = async function (id) {
     if (confirm("Are you sure you want to completely remove this member from the database?")) {
         try {
             await fetch(`${API_URL}/family/member/${id}`, { method: 'DELETE' });
             await fetchFamily();
             render();
-        } catch(e) {}
+        } catch (e) { }
     }
 }
 
-window.addFamilyMember = async function() {
+window.addFamilyMember = async function () {
     const input = document.getElementById('new-member-input');
     const name = input.value.trim();
     if (name && state.userFamily) {
         try {
             await fetch(`${API_URL}/family/member`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: name, code: state.userFamily, role: 'member' })
             });
             await fetchFamily();
             render();
-        } catch(e) {}
+        } catch (e) { }
     } else {
         alert("Please enter a valid name.");
     }
 }
 
 function renderFamily() {
-    if (!state.user) return ''; 
+    if (!state.user) return '';
 
     if (!state.userFamily || !state.familyData) {
         return `
@@ -591,19 +591,19 @@ function renderFamily() {
     `;
 }
 
-window.handleAddComment = async function() {
+window.handleAddComment = async function () {
     const input = document.getElementById('comment-input');
     const content = input.value.trim();
     if (content && state.userFamily) {
         try {
             const author = state.familyData.members.find(m => m.role === 'leader')?.name || "User";
             await fetch(`${API_URL}/family/post`, {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ author, content, time: "Just now", code: state.userFamily })
             });
             await fetchFamily();
             render();
-        } catch(e) {}
+        } catch (e) { }
     }
 }
 
@@ -619,11 +619,11 @@ async function fetchAdminUsers() {
             state.route = 'home';
             render();
         }
-    } catch(e) { console.error(e); }
+    } catch (e) { console.error(e); }
 }
 
 function renderAdmin() {
-    if (!state.user) return ''; 
+    if (!state.user) return '';
     let tableRows = (state.adminUsers || []).map(u => `
         <tr>
             <td style="padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); font-family: monospace;">${u.id}</td>
