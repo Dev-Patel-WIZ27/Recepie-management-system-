@@ -1,4 +1,5 @@
 const API_URL = "https://recepie-backend-1jjc.onrender.com";
+window.OWNER_PHONE = "1234567890"; // IMPORTANT: Change this to your real phone number
 
 // Global State
 const state = {
@@ -35,6 +36,7 @@ function render() {
                         <a class="nav-link active" id="nav-home" onclick="navigate('home')">Home</a>
                         <a class="nav-link" id="nav-pantry" onclick="navigate('pantry')">Pantry</a>
                         <a class="nav-link" id="nav-family" onclick="navigate('family')">Family</a>
+                        ${state.user && state.user.phone === window.OWNER_PHONE ? `<a class="nav-link" id="nav-admin" onclick="navigate('admin')" style="color:#d63031;"><i class="ph-bold ph-lock-key"></i> Admin</a>` : ''}
                         <button class="btn btn-primary" id="nav-login" onclick="navigate('login')" style="padding: 8px 16px; font-size: 0.9rem;">Login</button>
                     </div>
                 </nav>
