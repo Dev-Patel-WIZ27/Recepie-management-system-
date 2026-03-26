@@ -36,11 +36,14 @@ class Post(Base):
 
     group = relationship("FamilyGroup", back_populates="posts")
 
-class Recipe(Base):
+class Recipe(Base) :
     __tablename__ = "recipes"
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     ingredients = Column(JSON) # Lists of strings
+    instructions = Column(Text, nullable=True) # Full text instructions
+    calories = Column(Integer, nullable=True) # Calorie count
+    servings = Column(Integer, nullable=True) # Number of servings
     image = Column(String)
     time = Column(String)
 

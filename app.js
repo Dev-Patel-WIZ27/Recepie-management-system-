@@ -402,7 +402,7 @@ function renderPantry() {
                             <span style="color: var(--primary-color); font-weight: 700;">${r.matchCount} matched</span> 
                             ${r.missingCount > 0 ? `<span style="opacity: 0.6;">• ${r.missingCount} missing</span>` : ''}
                         </p>
-                        <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.title + ' recipe')}', '_blank')">
+                        <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="showRecipeDetails(${r.id})">
                             ${isComplete ? 'Start Cooking' : 'View Full Recipe'}
                         </button>
                     </div>
@@ -428,7 +428,7 @@ function renderPantry() {
             <div class="glass glass-3d" style="padding: 40px; background: rgba(255,255,255,0.85);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
                     <h2 style="margin: 0; font-size: 2rem;">Cook Now (From DB)</h2>
-                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary-color); background: rgba(255,94,58,0.1); padding: 8px 16px; border-radius: 20px;">
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary-color); background: rgba(255,94,58,0.15); padding: 8px 16px; border-radius: 20px;">
                         ${state.ingredients.length} Selected
                     </div>
                 </div>
@@ -437,7 +437,73 @@ function renderPantry() {
                 </div>
             </div>
         </div>
+
+        <!-- Recipe Details Modal -->
+        <div id="recipe-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content glass-3d">
+                <button class="modal-close" onclick="closeRecipeModal()">×</button>
+                <div id="modal-body"></div>
+            </div>
+        </div>
     `;
+}
+
+window.showRecipeDetails = function (recipeId) {
+    const recipe = state.matchedRecipes.find(r => r.id === recipeId);
+    if (!recipe) return;
+
+    const modal = document.getElementById('recipe-modal');
+    const body = document.getElementById('modal-body');
+    
+    body.innerHTML = `
+        <div style="border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; height: 300px;">
+            <img src="${recipe.image}" style="width: 100%; height: 100%; object-fit: cover;" alt="${recipe.title}">
+        </div>
+        <h2 style="font-size: 2.5rem; margin-bottom: 8px;">${recipe.title}</h2>
+        <div style="display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
+            <div style="background: rgba(255,94,58,0.1); color: var(--primary-color); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">
+                <i class="ph-fill ph-clock"></i> ${recipe.time}
+            </div>
+            <div style="background: rgba(16,185,129,0.1); color: #10b981; padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">
+                <i class="ph-fill ph-lightning"></i> ${recipe.calories} kcal
+            </div>
+            <div style="background: rgba(0,0,0,0.05); color: var(--text-dark); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem;">
+                <i class="ph-fill ph-users"></i> Serves ${recipe.servings}
+            </div>
+        </div>
+
+        <div class="responsive-grid" style="gap: 32px; text-align: left; align-items: start;">
+            <div>
+                <h3 style="margin-bottom: 16px; font-size: 1.3rem;"><i class="ph-bold ph-list-checks"></i> Ingredients</h3>
+                <ul style="padding-left: 20px; color: var(--text-dark); opacity: 0.9; line-height: 1.6;">
+                    ${recipe.ingredients.map(ing => `
+                        <li style="margin-bottom: 8px; color: ${state.ingredients.includes(ing) ? 'var(--primary-color)' : 'inherit'}; font-weight: ${state.ingredients.includes(ing) ? '700' : 'normal'}">
+                            ${ing} ${state.ingredients.includes(ing) ? ' <i class="ph-bold ph-check-circle"></i>' : ''}
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 16px; font-size: 1.3rem;"><i class="ph-bold ph-cooking-pot"></i> Instructions</h3>
+                <p style="color: var(--text-dark); line-height: 1.8; font-size: 1.1rem; white-space: pre-line;">${recipe.instructions || 'Loading instructions...'}</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px; text-align: center;">
+            <button class="btn btn-primary glass-3d" style="padding: 16px 40px; font-size: 1.1rem;" onclick="closeRecipeModal()">Close & Back to Pantry</button>
+        </div>
+    `;
+    
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+window.closeRecipeModal = function () {
+    const modal = document.getElementById('recipe-modal');
+    modal.style.display = 'none';
+    if (state.route !== 'home') {
+        document.body.style.overflow = 'auto';
+    }
 }
 
 window.toggleIngredient = async function (item) {

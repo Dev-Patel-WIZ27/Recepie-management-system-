@@ -37,16 +37,51 @@ app.add_middleware(
 def seed_db(db: Session):
     if db.query(models.Recipe).count() == 0:
         mock_recipes = [
-            {"title": "Tomato Basil Pasta", "ingredients": ["Pasta", "Tomato", "Garlic", "Olive Oil", "Salt", "Parmesan", "Black Pepper"], "image": "https://images.unsplash.com/photo-1621996316526-78b17b6a4a15?w=400", "time": "20 mins"},
-            {"title": "Garlic Butter Rice", "ingredients": ["Rice", "Garlic", "Butter", "Salt"], "image": "https://images.unsplash.com/photo-1512058564366-18510beaabec?w=400", "time": "25 mins"},
-            {"title": "Veggie Stir Fry", "ingredients": ["Carrot", "Bell Pepper", "Onion", "Tofu", "Soy Sauce", "Mushroom", "Zucchini"], "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400", "time": "15 mins"},
-            {"title": "Chicken Potato Roast", "ingredients": ["Chicken", "Potato", "Olive Oil", "Garlic", "Salt", "Asparagus"], "image": "https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=400", "time": "40 mins"},
-            {"title": "Avocado Toast", "ingredients": ["Bread", "Avocado", "Lemon", "Salt", "Black Pepper", "Eggs"], "image": "https://images.unsplash.com/photo-1588137378633-981eeff4711d?w=400", "time": "10 mins"},
-            {"title": "Mushroom Risotto", "ingredients": ["Rice", "Mushroom", "Onion", "Garlic", "Butter", "Parmesan"], "image": "https://images.unsplash.com/photo-1476124369491-e7addf5db378?w=400", "time": "45 mins"},
-            {"title": "Honey Glazed Salmon", "ingredients": ["Salmon", "Honey", "Soy Sauce", "Garlic", "Lime"], "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400", "time": "20 mins"},
-            {"title": "Spinach Omelet", "ingredients": ["Eggs", "Spinach", "Butter", "Salt", "Cheese"], "image": "https://images.unsplash.com/photo-1510693061483-1ce5dc967073?w=400", "time": "15 mins"},
-            {"title": "Chicken Alfredo", "ingredients": ["Chicken", "Pasta", "Heavy Cream", "Garlic", "Parmesan", "Butter"], "image": "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=400", "time": "30 mins"},
-            {"title": "Sweet Potato Fries", "ingredients": ["Sweet Potato", "Olive Oil", "Salt", "Paprika"], "image": "https://images.unsplash.com/photo-1604152002388-7264a27bc25d?w=400", "time": "30 mins"}
+            {
+                "title": "Tomato Basil Pasta", 
+                "ingredients": ["Pasta", "Tomato", "Garlic", "Olive Oil", "Salt", "Parmesan", "Black Pepper"], 
+                "instructions": "1. Boil pasta in salted water. 2. Sauté garlic in olive oil. 3. Add diced tomatoes and simmer. 4. Toss pasta with sauce and top with parmesan and pepper.",
+                "calories": 450,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1621996316526-78b17b6a4a15?w=400", 
+                "time": "20 mins"
+            },
+            {
+                "title": "Garlic Butter Rice", 
+                "ingredients": ["Rice", "Garlic", "Butter", "Salt"], 
+                "instructions": "1. Cook rice as per package instructions. 2. Melt butter in a pan and sauté minced garlic. 3. Mix the garlic butter into the warm rice. 4. Season with salt.",
+                "calories": 320,
+                "servings": 1,
+                "image": "https://images.unsplash.com/photo-1512058564366-18510beaabec?w=400", 
+                "time": "25 mins"
+            },
+            {
+                "title": "Veggie Stir Fry", 
+                "ingredients": ["Carrot", "Bell Pepper", "Onion", "Tofu", "Soy Sauce", "Mushroom", "Zucchini"], 
+                "instructions": "1. Chop all vegetables and tofu. 2. Heat oil in a wok. 3. Sauté veggies until tender-crisp. 4. Add tofu and soy sauce, stir well.",
+                "calories": 280,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400", 
+                "time": "15 mins"
+            },
+            {
+                "title": "Chicken Potato Roast", 
+                "ingredients": ["Chicken", "Potato", "Olive Oil", "Garlic", "Salt", "Asparagus"], 
+                "instructions": "1. Preheat oven to 200°C. 2. Toss chicken, potatoes, and asparagus with oil and garlic. 3. Season with salt. 4. Roast for 35-40 mins until golden.",
+                "calories": 550,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=400", 
+                "time": "40 mins"
+            },
+            {
+                "title": "Avocado Toast", 
+                "ingredients": ["Bread", "Avocado", "Lemon", "Salt", "Black Pepper", "Eggs"], 
+                "instructions": "1. Toast the bread. 2. Mash avocado with lemon, salt, and pepper. 3. Spread on toast. 4. Top with a poached or fried egg.",
+                "calories": 380,
+                "servings": 1,
+                "image": "https://images.unsplash.com/photo-1588137378633-981eeff4711d?w=400", 
+                "time": "10 mins"
+            }
         ]
         for r in mock_recipes:
             db.add(models.Recipe(**r))
@@ -168,6 +203,9 @@ def get_matching_recipes(req: MatchRequest, db: Session = Depends(get_db)):
                 "id": r.id,
                 "title": r.title,
                 "ingredients": recipe_ingredients,
+                "instructions": r.instructions,
+                "calories": r.calories,
+                "servings": r.servings,
                 "image": r.image,
                 "time": r.time,
                 "matchCount": match_count,
