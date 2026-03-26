@@ -311,7 +311,7 @@ body::before {
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
   z-index: 2000;
-  display: flex !important;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 20px;
