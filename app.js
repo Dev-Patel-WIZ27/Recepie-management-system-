@@ -219,11 +219,11 @@ function renderLogin() {
             <div id="login-step-1">
                 <div class="input-group">
                     <label>Your Name <span style="font-size: 0.8rem; color: #d63031;">*</span></label>
-                    <input type="text" id="name-input" class="input-field" placeholder="e.g. Gordon Ramsay" autocomplete="off" style="margin-bottom: 24px;" />
+                    <input type="text" id="name-input" class="input-field" placeholder="e.g. Gordon Ramsay" autocomplete="off" style="margin-bottom: 24px;" onfocus="hideChefBubble()" />
                 </div>
                 <div class="input-group">
                     <label>Mobile Number</label>
-                    <input type="tel" id="mobile-input" class="input-field" placeholder="e.g. 9876543210" autocomplete="off" />
+                    <input type="tel" id="mobile-input" class="input-field" placeholder="e.g. 9876543210" autocomplete="off" onfocus="hideChefBubble()" />
                 </div>
                 <button id="send-otp-btn" class="btn btn-primary glass-3d" style="width: 100%; padding: 16px; font-size: 1.1rem;" onclick="handleSendOTP()">
                     Send Security Code <i class="ph-bold ph-paper-plane-right"></i>
