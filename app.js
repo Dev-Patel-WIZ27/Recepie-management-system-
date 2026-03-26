@@ -102,7 +102,6 @@ function updateNavState() {
             loginBtn.onclick = () => navigate('login');
             loginBtn.classList.replace('btn-secondary', 'btn-primary');
         }
-        }
     }
     
     // Dynamically adjust padding to prevent overflow on fullscreen pages
