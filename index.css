@@ -144,33 +144,33 @@ body::before {
 /* 3D Chef Animation System */
 .chef-walk-wrapper {
   position: absolute;
-  bottom: -15px;
-  left: -130px;
+  bottom: 0px;
+  left: -140px;
   z-index: 20;
-  animation: chefWalkIn 2.2s ease-out forwards;
+  animation: chefWalkIn 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 .chef-float {
   width: 150px;
-  filter: drop-shadow(10px 15px 15px rgba(0,0,0,0.35));
-  animation: chefWaddle 2.2s ease-out forwards, chefHover 3s ease-in-out infinite 2.2s;
+  filter: drop-shadow(15px 25px 20px rgba(0,0,0,0.4));
+  animation: chefWaddle 3s cubic-bezier(0.25, 1, 0.5, 1) forwards, chefHover 3.5s ease-in-out infinite 3s;
   display: flex; justify-content: center; align-items:center; position: relative;
 }
 
 @keyframes chefWalkIn {
-  0% { transform: translateX(-400px); opacity: 0; }
-  10% { opacity: 1; }
+  0% { transform: translateX(-50vw); opacity: 0; }
   100% { transform: translateX(0); opacity: 1; }
 }
 
 @keyframes chefWaddle {
   0% { transform: translateY(0) rotate(-15deg); }
-  15% { transform: translateY(-35px) rotate(15deg); }
-  30% { transform: translateY(0) rotate(-15deg); }
-  45% { transform: translateY(-35px) rotate(15deg); }
-  60% { transform: translateY(0) rotate(-15deg); }
-  75% { transform: translateY(-25px) rotate(10deg); }
-  90% { transform: translateY(0) rotate(-5deg); }
+  12% { transform: translateY(-25px) rotate(15deg) scale(1.05); }
+  25% { transform: translateY(0) rotate(-15deg); }
+  37% { transform: translateY(-25px) rotate(15deg) scale(1.05); }
+  50% { transform: translateY(0) rotate(-15deg); }
+  62% { transform: translateY(-15px) rotate(10deg); }
+  75% { transform: translateY(0) rotate(-5deg); }
+  87% { transform: translateY(-5px) rotate(0deg); }
   100% { transform: translateY(0) rotate(0deg); }
 }
 

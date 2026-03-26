@@ -70,6 +70,13 @@ window.navigate = async function(route) {
         state.route = route;
     }
     
+    // Scroll Lock for Login Page
+    if (state.route === 'login') {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'auto';
+    }
+    
     if (state.route === 'pantry') await fetchMatches();
     if (state.route === 'family' && state.userFamily) await fetchFamily();
     if (state.route === 'admin') await fetchAdminUsers();
@@ -186,23 +193,23 @@ function simulateSMS(phone, otp) {
 
 function renderLogin() {
     return `
-        <div class="glass glass-3d" style="max-width: 450px; margin: 60px auto; padding: 48px; position: relative;">
-            
-            <!-- Walking 3D Chef Animation -->
-            <div class="chef-walk-wrapper">
-                <div class="chef-float">
-                    <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Man%20cook/3D/man_cook_3d.png" style="width: 140px; height: auto;" alt="3D Chef">
-                    <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Pizza/3D/pizza_3d.png" style="width: 65px; position: absolute; top: 40px; left: -15px; transform: rotate(-20deg); filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));" alt="3D Pizza">
+        <div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 180px);">
+            <div class="glass glass-3d" style="max-width: 450px; width: 100%; padding: 40px; position: relative; z-index: 10;">
+                
+                <!-- Walking 3D Chef Animation -->
+                <div class="chef-walk-wrapper">
+                    <div class="chef-float">
+                        <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Man%20cook/3D/man_cook_3d.png" style="width: 150px; height: auto;" alt="3D Chef">
+                        <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Pizza/3D/pizza_3d.png" style="width: 75px; position: absolute; top: 45px; left: -25px; transform: rotate(-20deg); filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));" alt="3D Pizza">
+                    </div>
                 </div>
-            </div>
 
-            <div style="text-align: center; margin-bottom: 32px;">
-                <div style="width: 72px; height: 72px; background: linear-gradient(135deg, rgba(255,94,58,0.2), rgba(255,94,58,0.05)); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 16px;">
-                    <i class="ph-fill ph-shield-check"></i>
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="width: 64px; height: 64px; background: linear-gradient(135deg, rgba(255,94,58,0.2), rgba(255,94,58,0.05)); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 12px;">
+                        <i class="ph-fill ph-shield-check"></i>
+                    </div>
+                    <h2 style="font-size: 1.8rem; font-weight: 800;">Secure Login</h2>
                 </div>
-                <h2 style="font-size: 2rem; font-weight: 800;">Secure Login</h2>
-                <p style="color: var(--text-dark); font-weight: 500; margin-top: 8px;">Enter your mobile number to receive a secure code.</p>
-            </div>
             
             <div id="login-step-1">
                 <div class="input-group">
@@ -219,20 +226,21 @@ function renderLogin() {
             </div>
 
             <div id="login-step-2" style="display: none;">
-                <div class="input-group">
+                <div class="input-group" style="margin-bottom: 16px;">
                     <label>Enter 4-digit OTP Code</label>
                     <input type="number" id="otp-input" class="input-field" placeholder="1234" autocomplete="off" />
-                    <div id="otp-hint" style="margin-top: 10px; font-size: 1rem; color: var(--primary-color); font-weight: 800; display:none; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 8px; text-align: center;"></div>
+                    <div id="otp-hint" style="margin-top: 10px; font-size: 0.9rem; color: var(--primary-color); font-weight: 800; display:none; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 8px; text-align: center;"></div>
                 </div>
-                <button class="btn btn-primary glass-3d" style="width: 100%; padding: 16px; font-size: 1.1rem;" onclick="handleVerifyOTP()">
+                <button class="btn btn-primary glass-3d" style="width: 100%; padding: 14px; font-size: 1.1rem;" onclick="handleVerifyOTP()">
                     Verify & Login
                 </button>
-                <div style="text-align: center; margin-top: 24px;">
+                <div style="text-align: center; margin-top: 16px;">
                     <a href="#" onclick="showStep1()" style="color: #636e72; text-decoration: none; font-size: 0.9rem; font-weight: 600;">
                         <i class="ph-bold ph-arrow-left"></i> Change mobile number
                     </a>
                 </div>
             </div>
+        </div>
         </div>
     `;
 }
