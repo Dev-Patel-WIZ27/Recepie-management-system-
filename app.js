@@ -200,7 +200,6 @@ function renderLogin() {
                 <div class="chef-walk-wrapper">
                     <div class="chef-float">
                         <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Man%20cook/Default/3D/man_cook_3d_default.png" style="width: 150px; height: auto;" alt="3D Chef">
-                        <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Pizza/3D/pizza_3d.png" style="width: 75px; position: absolute; top: 45px; left: -25px; transform: rotate(-20deg); filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));" alt="3D Pizza">
                     </div>
                 </div>
 

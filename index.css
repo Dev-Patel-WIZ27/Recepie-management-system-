@@ -158,8 +158,8 @@ body::before {
 }
 
 @keyframes chefWalkIn {
-  0% { transform: translateX(-50vw); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
+  0% { transform: translateX(calc(-50vw - 200px)); }
+  100% { transform: translateX(0); }
 }
 
 @keyframes chefWaddle {
