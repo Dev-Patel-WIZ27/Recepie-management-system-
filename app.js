@@ -194,16 +194,16 @@ function simulateSMS(phone, otp) {
 function renderLogin() {
     return `
         <div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 180px); position: relative;">
-            
-            <!-- Walking Chef Animation -->
-            <div class="chef-walk-wrapper">
-                <div class="chef-float">
-                    <img src="./walking-chef.png" style="width: 250px; height: auto; mix-blend-mode: darken;" alt="Walking Chef">
-                </div>
-            </div>
-
             <div class="glass glass-3d" style="max-width: 450px; width: 100%; padding: 40px; position: relative; z-index: 10;">
                 
+                <!-- Walking 3D Chef Animation -->
+                <div class="chef-walk-wrapper">
+                    <div class="chef-float">
+                        <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Man%20cook/Default/3D/man_cook_3d_default.png" style="width: 150px; height: auto;" alt="3D Chef">
+                        <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Pizza/3D/pizza_3d.png" style="width: 75px; position: absolute; top: 45px; left: -25px; transform: rotate(-20deg); filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));" alt="3D Pizza">
+                    </div>
+                </div>
+
                 <div style="text-align: center; margin-bottom: 24px;">
                     <div style="width: 64px; height: 64px; background: linear-gradient(135deg, rgba(255,94,58,0.2), rgba(255,94,58,0.05)); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 12px;">
                         <i class="ph-fill ph-shield-check"></i>
