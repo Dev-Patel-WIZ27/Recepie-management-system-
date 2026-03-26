@@ -1,5 +1,5 @@
 const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
-    ? "http://localhost:8000" 
+    ? `http://${window.location.hostname}:8000` 
     : "https://recepie-backend-1jjc.onrender.com";
 window.OWNER_PHONE = "9313765265"; // IMPORTANT: Change this to your real phone number
 

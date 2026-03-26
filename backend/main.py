@@ -291,7 +291,13 @@ def get_matching_recipes(req: MatchRequest, db: Session = Depends(get_db)):
             recipe_ingredients = recipe_ingredients_raw or []
 
         normalized_recipe_ingredients = [ing.strip().lower() for ing in recipe_ingredients]
-        matched_items = [ing for ing in normalized_recipe_ingredients if ing in user_ingredients]
+        
+        # Fuzzy/Substring Matching: Count if any user ingredient is part of a recipe ingredient
+        matched_items = []
+        for recipe_ing in normalized_recipe_ingredients:
+            if any(user_ing in recipe_ing for user_ing in user_ingredients):
+                matched_items.append(recipe_ing)
+        
         match_count = len(matched_items)
         
         if match_count > 0:
