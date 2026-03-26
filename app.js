@@ -73,8 +73,10 @@ window.navigate = async function(route) {
     // Scroll Lock for Login Page and Home Page
     if (state.route === 'login' || state.route === 'home') {
         document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
     } else {
         document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
     }
     
     if (state.route === 'pantry') await fetchMatches();
@@ -130,9 +132,9 @@ async function fetchFamily() {
 // --- RENDERERS ---
 function renderHome() {
     return `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 120px); max-width: 800px; margin: 0 auto; text-align: center; overflow: hidden;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 110px); max-width: 800px; margin: 0 auto; text-align: center; overflow: hidden; padding-bottom: 20px;">
             
-            <div style="flex-shrink: 0; margin-bottom: 24px; margin-top: 10px;">
+            <div style="flex-shrink: 0; margin-bottom: 20px;">
                 <div class="glass-3d" style="display: inline-block; padding: 8px 20px; color: var(--primary-color); border-radius: 30px; font-weight: 700; margin-bottom: 16px; font-size: 0.9rem;">
                     🚀 The Smarter Way to Cook
                 </div>
