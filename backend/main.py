@@ -81,6 +81,114 @@ def seed_db(db: Session):
                 "servings": 1,
                 "image": "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400", 
                 "time": "10 mins"
+            },
+            {
+                "title": "Mushroom Risotto", 
+                "ingredients": ["Rice", "Mushroom", "Onion", "Garlic", "Butter", "Parmesan"], 
+                "instructions": "1. Sauté onions and mushrooms in butter. 2. Add rice and stir. 3. Slowly add broth until absorbed. 4. Stir in parmesan and enjoy.",
+                "calories": 420,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1476124369491-e7addf5db378?w=400", 
+                "time": "45 mins"
+            },
+            {
+                "title": "Honey Glazed Salmon", 
+                "ingredients": ["Salmon", "Honey", "Soy Sauce", "Garlic", "Lemon"], 
+                "instructions": "1. Mix honey, soy sauce, and garlic. 2. Pour over salmon and marinate for 15 mins. 3. Sear salmon in a pan until cooked through. 4. Serve with lemon slices.",
+                "calories": 480,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400", 
+                "time": "20 mins"
+            },
+            {
+                "title": "Spinach Omelet", 
+                "ingredients": ["Eggs", "Spinach", "Butter", "Salt", "Cheese"], 
+                "instructions": "1. Sauté spinach in butter. 2. Whisk eggs and pour over spinach. 3. Add cheese and fold when set. 4. Season with salt.",
+                "calories": 310,
+                "servings": 1,
+                "image": "https://images.unsplash.com/photo-1510693061483-1ce5dc967073?w=400", 
+                "time": "15 mins"
+            },
+            {
+                "title": "Chicken Alfredo", 
+                "ingredients": ["Chicken", "Pasta", "Heavy Cream", "Garlic", "Parmesan", "Butter"], 
+                "instructions": "1. Cook pasta and chicken separately. 2. Melt butter with garlic and cream. 3. Stir in parmesan to thicken. 4. Toss with chicken and pasta.",
+                "calories": 650,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=400", 
+                "time": "30 mins"
+            },
+            {
+                "title": "Sweet Potato Fries", 
+                "ingredients": ["Sweet Potato", "Olive Oil", "Salt", "Paprika"], 
+                "instructions": "1. Cut sweet potatoes into wedges. 2. Toss with oil and spices. 3. Bake at 200°C for 25-30 mins until crispy.",
+                "calories": 250,
+                "servings": 1,
+                "image": "https://images.unsplash.com/photo-1604152002388-7264a27bc25d?w=400", 
+                "time": "30 mins"
+            },
+            {
+                "title": "Classic Caesar Salad", 
+                "ingredients": ["Lettuce", "Bread", "Parmesan", "Lemon", "Garlic", "Olive Oil"], 
+                "instructions": "1. Chop lettuce and make croutons from bread. 2. Whisk lemon, garlic, and oil for dressing. 3. Toss all together with parmesan.",
+                "calories": 300,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400", 
+                "time": "15 mins"
+            },
+            {
+                "title": "Garlic Shrimp Scampi", 
+                "ingredients": ["Shrimp", "Garlic", "Butter", "Lemon", "Pasta", "Salt"], 
+                "instructions": "1. Boil pasta. 2. Sauté shrimp in butter and minced garlic. 3. Add lemon juice and toss with cooked pasta.",
+                "calories": 420,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1533777324565-a040eb52facd?w=400", 
+                "time": "20 mins"
+            },
+            {
+                "title": "Roasted Vegetable Quinoa", 
+                "ingredients": ["Quinoa", "Zucchini", "Bell Pepper", "Onion", "Olive Oil"], 
+                "instructions": "1. Roast veggies with oil. 2. Cook quinoa separately. 3. Toss together for a healthy bowl.",
+                "calories": 350,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400", 
+                "time": "25 mins"
+            },
+            {
+                "title": "Lentil Soup", 
+                "ingredients": ["Lentils", "Carrot", "Onion", "Celery", "Tomato"], 
+                "instructions": "1. Sauté veggies. 2. Add lentils and chopped tomatoes. 3. Simmer in water/broth until lentils are soft.",
+                "calories": 320,
+                "servings": 3,
+                "image": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400", 
+                "time": "40 mins"
+            },
+            {
+                "title": "Caprese Salad", 
+                "ingredients": ["Tomato", "Cheese", "Basil", "Olive Oil", "Salt"], 
+                "instructions": "1. Slice tomatoes and fresh cheese. 2. Layer with basil leaves. 3. Drizzle with oil and season with salt.",
+                "calories": 220,
+                "servings": 1,
+                "image": "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=400", 
+                "time": "10 mins"
+            },
+            {
+                "title": "Pesto Chicken Pasta", 
+                "ingredients": ["Pasta", "Chicken", "Basil", "Garlic", "Parmesan", "Olive Oil"], 
+                "instructions": "1. Cook pasta and chicken. 2. Blend basil, garlic, parmesan, and oil for pesto. 3. Toss all together.",
+                "calories": 520,
+                "servings": 2,
+                "image": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=400", 
+                "time": "25 mins"
+            },
+            {
+                "title": "Egg Fried Rice", 
+                "ingredients": ["Rice", "Eggs", "Onion", "Peas", "Soy Sauce"], 
+                "instructions": "1. Scramble eggs. 2. Sauté veggies and add cooked rice. 3. Mix in soy sauce and scramble eggs.",
+                "calories": 380,
+                "servings": 1,
+                "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400", 
+                "time": "20 mins"
             }
         ]
         for r in mock_recipes:
