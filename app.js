@@ -193,16 +193,17 @@ function simulateSMS(phone, otp) {
 
 function renderLogin() {
     return `
-        <div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 180px);">
+        <div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 180px); position: relative;">
+            
+            <!-- Walking Chef Animation -->
+            <div class="chef-walk-wrapper">
+                <div class="chef-float">
+                    <img src="./walking-chef.png" style="width: 250px; height: auto; mix-blend-mode: darken;" alt="Walking Chef">
+                </div>
+            </div>
+
             <div class="glass glass-3d" style="max-width: 450px; width: 100%; padding: 40px; position: relative; z-index: 10;">
                 
-                <!-- Walking Chef Animation -->
-                <div class="chef-walk-wrapper">
-                    <div class="chef-float">
-                        <img src="./walking-chef.png" style="width: 220px; height: auto; mix-blend-mode: multiply;" alt="Walking Chef">
-                    </div>
-                </div>
-
                 <div style="text-align: center; margin-bottom: 24px;">
                     <div style="width: 64px; height: 64px; background: linear-gradient(135deg, rgba(255,94,58,0.2), rgba(255,94,58,0.05)); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 12px;">
                         <i class="ph-fill ph-shield-check"></i>

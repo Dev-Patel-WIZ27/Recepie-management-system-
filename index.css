@@ -145,15 +145,16 @@ body::before {
 .chef-walk-wrapper {
   position: absolute;
   bottom: 0px;
-  left: -140px;
+  left: 10%;
   z-index: 20;
-  animation: chefWalkIn 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  pointer-events: none;
+  animation: chefWalkIn 3s linear forwards;
 }
 
 .chef-float {
-  width: 220px;
-  filter: drop-shadow(15px 25px 20px rgba(0,0,0,0.4));
-  animation: chefGlide 3s ease-out forwards;
+  width: 250px;
+  filter: drop-shadow(15px 25px 20px rgba(0,0,0,0.5));
+  animation: chefStep 3s linear forwards;
   display: flex; justify-content: center; align-items:center; position: relative;
 }
 
@@ -162,12 +163,16 @@ body::before {
   100% { transform: translateX(0); }
 }
 
-@keyframes chefGlide {
-  0% { transform: translateY(0); }
-  25% { transform: translateY(-8px); }
-  50% { transform: translateY(0); }
-  75% { transform: translateY(-8px); }
-  100% { transform: translateY(0); }
+@keyframes chefStep {
+  0% { transform: translateY(0) rotate(-6deg); }
+  12% { transform: translateY(-15px) rotate(6deg); }
+  25% { transform: translateY(0) rotate(-6deg); }
+  37% { transform: translateY(-15px) rotate(6deg); }
+  50% { transform: translateY(0) rotate(-6deg); }
+  62% { transform: translateY(-15px) rotate(6deg); }
+  75% { transform: translateY(0) rotate(-6deg); }
+  87% { transform: translateY(-15px) rotate(6deg); }
+  100% { transform: translateY(0) rotate(0deg); }
 }
 
 .ph-spin { animation: spin 1s linear infinite; }
