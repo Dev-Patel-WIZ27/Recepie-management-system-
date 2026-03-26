@@ -199,7 +199,7 @@ function renderLogin() {
                 <!-- Walking Chef Animation -->
                 <div class="chef-walk-wrapper">
                     <div class="chef-float">
-                        <img src="./walking-chef.png" style="width: 220px; height: auto;" alt="Walking Chef">
+                        <img src="./walking-chef.png" style="width: 220px; height: auto; mix-blend-mode: multiply;" alt="Walking Chef">
                     </div>
                 </div>
 
