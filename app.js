@@ -201,6 +201,11 @@ function renderLogin() {
                     <div class="chef-float">
                         <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Man%20cook/Default/3D/man_cook_3d_default.png" style="width: 150px; height: auto;" alt="3D Chef">
                         <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Shallow%20pan%20of%20food/3D/shallow_pan_of_food_3d.png" style="width: 85px; position: absolute; top: 40px; left: -30px; transform: rotate(-15deg); filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));" alt="3D Full Dish">
+                        
+                        <!-- Speech Bubble -->
+                        <div class="chef-speech-bubble">
+                            Welcome! <br><span style="color: var(--primary-color);">Jai Shree Krishna</span> 🙏
+                        </div>
                     </div>
                 </div>
 

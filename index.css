@@ -158,6 +158,41 @@ body::before {
   display: flex; justify-content: center; align-items:center; position: relative;
 }
 
+.chef-speech-bubble {
+  position: absolute;
+  top: -50px;
+  right: -130px;
+  background: white;
+  color: var(--text-dark);
+  padding: 10px 14px;
+  border-radius: 18px 18px 18px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15), 0 0 0 2px rgba(255, 94, 58, 0.15);
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: bottom left;
+  animation: bubblePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 2.6s;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.chef-speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-top: 10px solid white;
+  border-right: 12px solid transparent;
+}
+
+@keyframes bubblePop {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 @keyframes chefWalkIn {
   0% { transform: translateX(calc(-50vw - 200px)); }
   100% { transform: translateX(0); }
