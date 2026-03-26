@@ -141,11 +141,6 @@ async function fetchFamily() {
 function renderHome() {
     return `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 110px); max-width: 800px; margin: 0 auto; text-align: center; overflow: hidden; padding-bottom: 20px; position: relative;">
-            
-            <!-- 3D FLOATING MEALS -->
-            <img src="pizza.png" style="position: absolute; top: 10%; left: -10%; width: 120px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); animation: float3d-1 6s ease-in-out infinite; z-index: -1; mix-blend-mode: multiply;" alt="Floating Pizza" />
-            <img src="burger.png" style="position: absolute; top: 50%; right: -15%; width: 140px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); animation: float3d-2 8s ease-in-out infinite; z-index: -1; mix-blend-mode: multiply;" alt="Floating Burger" />
-            <img src="noodles.png" style="position: absolute; bottom: 5%; left: 0%; width: 110px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); animation: float3d-3 7s ease-in-out infinite; z-index: -1; mix-blend-mode: multiply;" alt="Floating Noodles" />
 
             <div style="flex-shrink: 0; margin-bottom: 20px;">
                 <div class="glass-3d" style="display: inline-block; padding: 8px 20px; color: var(--primary-color); border-radius: 30px; font-weight: 700; margin-bottom: 16px; font-size: 0.9rem;">
