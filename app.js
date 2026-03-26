@@ -28,14 +28,13 @@ function render() {
         root.innerHTML = `
             <div id="layout" class="container">
                 <nav class="navbar glass">
-                    <a href="#" class="logo" onclick="navigate('home')">
+                    <a href="#" class="logo" onclick="navigate('home')" ondblclick="navigate('admin')" title="Double-click to access owner tools">
                         <img src="mealmate-logo.jpg" alt="Meal Mate" style="height: 32px; width: 32px; border-radius: 8px; object-fit: cover;"> Meal Mate
                     </a>
                     <div class="nav-links">
                         <a class="nav-link active" id="nav-home" onclick="navigate('home')">Home</a>
                         <a class="nav-link" id="nav-pantry" onclick="navigate('pantry')">Pantry</a>
                         <a class="nav-link" id="nav-family" onclick="navigate('family')">Family</a>
-                        <a class="nav-link" id="nav-admin" onclick="navigate('admin')" style="color:#d63031;"><i class="ph-bold ph-lock-key"></i> Admin</a>
                         <button class="btn btn-primary" id="nav-login" onclick="navigate('login')" style="padding: 8px 16px; font-size: 0.9rem;">Login</button>
                     </div>
                 </nav>
