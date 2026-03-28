@@ -13,6 +13,7 @@
   --radius-lg: 24px;
   --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -20,15 +21,26 @@ body {
   color: var(--text-dark);
   line-height: 1.6;
   min-height: 100vh;
-  background: url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80') no-repeat fixed;
-  background-size: 130% 130%; 
-  animation: bgPan 45s ease-in-out infinite alternate;
-  perspective: 1500px;
+  background-color: #f0f2f5;
   overflow-x: hidden;
+  perspective: 1500px;
 }
-@keyframes bgPan {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 100% 100%; }
+
+/* GPU-Accelerated Background Pan */
+.bg-fixed-layer {
+  position: fixed;
+  top: -10%; left: -10%; width: 120%; height: 120%;
+  background: url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80') no-repeat center;
+  background-size: cover;
+  z-index: -2;
+  transform: translate3d(0, 0, 0);
+  animation: bgPanModern 30s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes bgPanModern {
+  0% { transform: translate3d(-2%, -2%, 0) scale(1.1); }
+  100% { transform: translate3d(2%, 2%, 0) scale(1.1); }
 }
 body::before {
   content: '';
@@ -116,10 +128,47 @@ body::before {
 .nav-link:hover, .nav-link.active {
   color: var(--primary-color); background: rgba(255, 94, 58, 0.1); transform: scale(1.05);
 }
-#page-content { flex: 1; padding: 80px 0; animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+#page-content { 
+  flex: 1; 
+  padding: 80px 0; 
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-out {
+  opacity: 0 !important;
+  transform: translateY(-10px) scale(0.98);
+}
+
+.fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Skeleton Loading Effect */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 .input-group { margin-bottom: 24px; text-align: left; }
 .input-group label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-dark); }

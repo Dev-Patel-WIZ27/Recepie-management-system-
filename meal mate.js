@@ -12,7 +12,8 @@ const state = {
     generatedOTP: null,
     userFamily: null,
     familyData: null,
-    adminUsers: []
+    adminUsers: [],
+    isLoadingRecipes: false // New loading state
 };
 
 // Expanded Data (Ingredients remain static for UI picking)
@@ -36,6 +37,7 @@ function render() {
 
     if (!document.getElementById('layout')) {
         root.innerHTML = `
+            <div class="bg-fixed-layer"></div>
             <div id="layout" class="container">
                 <nav class="navbar glass">
                     <a href="#" class="logo" onclick="navigate('home')" ondblclick="navigate('admin')" title="Double-click to access owner tools">
@@ -49,7 +51,7 @@ function render() {
                         <button class="btn btn-primary" id="nav-login" onclick="navigate('login')" style="padding: 8px 16px; font-size: 0.9rem;">Login</button>
                     </div>
                 </nav>
-                <main id="page-content"></main>
+                <main id="page-content" class="fade-in"></main>
             </div>
         `;
     }
@@ -77,12 +79,22 @@ function render() {
 
 window.navigate = async function (route) {
     const protectedRoutes = ['pantry', 'family', 'admin'];
+    const content = document.getElementById('page-content');
+    
+    if (content) {
+        content.classList.add('fade-out');
+        await new Promise(r => setTimeout(r, 300));
+    }
+
     if (protectedRoutes.includes(route) && !state.user) {
         state.route = 'login';
     } else {
         if (route === 'admin') {
             const pass = prompt("Enter Owner Password:");
-            if (!pass) return; // User cancelled
+            if (!pass) {
+                if (content) content.classList.remove('fade-out');
+                return;
+            }
             window.adminSecret = pass;
         }
         state.route = route;
@@ -97,8 +109,14 @@ window.navigate = async function (route) {
         document.documentElement.style.overflow = 'auto';
     }
 
-    // Render the layout immediately so the user isn't stuck waiting
     render();
+    
+    const newContent = document.getElementById('page-content');
+    if (newContent) {
+        newContent.classList.remove('fade-out');
+        newContent.classList.add('fade-in');
+        setTimeout(() => newContent.classList.remove('fade-in'), 500);
+    }
 
     // Fetch background data asynchronously and trigger re-render
     if (state.route === 'pantry') fetchMatches().then(render);
@@ -133,6 +151,8 @@ function updateNavState() {
 
 // --- BACKEND API CALLS ---
 async function fetchMatches() {
+    state.isLoadingRecipes = true;
+    render(); // Show skeletons
     try {
         const res = await fetch(`${API_URL}/recipes/match`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -141,6 +161,8 @@ async function fetchMatches() {
         const data = await res.json();
         state.matchedRecipes = data.matches || [];
     } catch (e) { console.error(e); state.matchedRecipes = []; }
+    state.isLoadingRecipes = false;
+    render(); // Final update
 }
 
 async function fetchFamily() {
@@ -393,7 +415,22 @@ function renderPantry() {
     }
 
     let matchedRecipesHTML = '';
-    if (state.ingredients.length === 0) {
+    if (state.isLoadingRecipes) {
+        // Skeleton Screens
+        for(let i=0; i<4; i++) {
+            matchedRecipesHTML += `
+                <div class="glass-3d pulse" style="border-radius: var(--radius-md); overflow: hidden; height: 350px;">
+                    <div class="skeleton" style="width: 100%; height: 180px;"></div>
+                    <div style="padding: 20px;">
+                        <div class="skeleton" style="width: 70%; height: 24px; margin-bottom: 12px;"></div>
+                        <div class="skeleton" style="width: 100%; height: 12px; margin-bottom: 8px;"></div>
+                        <div class="skeleton" style="width: 100%; height: 12px; margin-bottom: 20px;"></div>
+                        <div class="skeleton" style="width: 100%; height: 40px; border-radius: 8px;"></div>
+                    </div>
+                </div>
+            `;
+        }
+    } else if (state.ingredients.length === 0) {
         matchedRecipesHTML = `<div style="text-align: center; color: var(--text-dark); font-weight: 500; padding: 40px; grid-column: span 2;">Select ingredients from your pantry to see what you can make!</div>`;
     } else if (state.matchedRecipes.length > 0) {
         state.matchedRecipes.forEach(r => {
@@ -527,9 +564,15 @@ window.toggleIngredient = async function (item) {
     } else {
         state.ingredients.push(item);
     }
-    render(); // Immediate visual feedback
-    await fetchMatches(); // Backend processing
-    render(); // Final recipes update
+    
+    // Smooth transition for recipe results
+    const recipeList = document.getElementById('recipe-list');
+    if (recipeList) recipeList.style.opacity = '0.5';
+    
+    render(); 
+    await fetchMatches(); 
+    
+    if (recipeList) recipeList.style.opacity = '1';
 }
 
 window.createFamilyGroup = async function () {
