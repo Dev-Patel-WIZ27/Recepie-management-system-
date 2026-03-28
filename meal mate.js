@@ -1,5 +1,5 @@
-const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
-    ? `http://${window.location.hostname}:8000` 
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? `http://${window.location.hostname}:8000`
     : "https://recepie-backend-1jjc.onrender.com";
 window.OWNER_PHONE = "9313765265"; // IMPORTANT: Change this to your real phone number
 
@@ -27,7 +27,7 @@ const mockIngredients = {
 // Application Router
 function render() {
     const root = document.getElementById('app');
-
+    
     // Save scroll positions before update
     const ingList = document.getElementById('ingredient-list');
     const recipeList = document.getElementById('recipe-list');
@@ -358,15 +358,15 @@ window.handleVerifyOTP = async function () {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone: window.tempPhone, otp: otpInput, name: window.tempName || null })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                state.user = { id: data.user_id, phone: data.phone };
-            }
-        })
-        .catch(e => {
-            console.warn("Backend verification failed. Relying on local session.");
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    state.user = { id: data.user_id, phone: data.phone };
+                }
+            })
+            .catch(e => {
+                console.warn("Backend verification failed. Relying on local session.");
+            });
 
         // Set local fallback user and navigate immediately for fast UI
         state.user = { phone: window.tempPhone };
@@ -399,7 +399,7 @@ function renderPantry() {
         state.matchedRecipes.forEach(r => {
             const progress = (r.completeness * 100).toFixed(0);
             const isComplete = r.missingCount === 0;
-            
+
             matchedRecipesHTML += `
                 <div class="glass-3d" style="border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; text-align: left; padding: 0; position: relative;">
                     ${isComplete ? '<div style="position: absolute; top: 12px; right: 12px; background: #10b981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; z-index: 5; box-shadow: 0 4px 10px rgba(16,185,129,0.3);"><i class="ph-bold ph-check-circle"></i> CAN COOK</div>' : ''}
@@ -469,7 +469,7 @@ window.showRecipeDetails = function (recipeId) {
 
     const modal = document.getElementById('recipe-modal');
     const body = document.getElementById('modal-body');
-    
+
     body.innerHTML = `
         <div style="border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; height: 300px;">
             <img src="${recipe.image}" style="width: 100%; height: 100%; object-fit: cover;" alt="${recipe.title}">
@@ -508,7 +508,7 @@ window.showRecipeDetails = function (recipeId) {
             <button class="btn btn-primary glass-3d" style="padding: 16px 40px; font-size: 1.1rem;" onclick="closeRecipeModal()">Close & Back to Pantry</button>
         </div>
     `;
-    
+
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
